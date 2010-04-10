@@ -22,7 +22,7 @@ class SCEmail {
     $mail = new SCEmail();
     $mail->bcc = $mail->loadMessageEmailRecipients($message);
     
-    $mail->from = SC_MESSAGE_EMAIL_FROM . "<" . str_replace(":board_id", $message->boardid, SC_MESSAGE_EMAIL_FROM_ADDRESS) . ">";
+    $mail->from = SC_MESSAGE_EMAIL_FROM . "<" . str_replace(":boardid", $message->boardid, SC_MESSAGE_EMAIL_FROM_ADDRESS) . ">";
     $mail->to = "";
     
     $mail->author = $message->author();
