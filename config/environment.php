@@ -12,7 +12,8 @@
       define("SC_DBPWD", "scmessageboard");
       define("SC_PAGETITLEBASE", "switchcomb");
       define("SC_CANEMAIL", false);
-      define("SCBASEPATH", "/webroot/switchcomb");
+      define("SC_MSGSOURCE", "web");
+      define("SCINCLUDEPATH", "/webroot/switchcomb");
       break;
    
     case "mobiledevelopment":
@@ -23,7 +24,8 @@
       define("SC_DBPWD", "scmessageboard");
       define("SC_PAGETITLEBASE", "mobile switchcomb");
       define("SC_CANEMAIL", false);
-      define("SCBASEPATH", "/webroot/mswitchcomb;/webroot/switchcomb");
+      define("SC_MSGSOURCE", "mobile web");
+      define("SCINCLUDEPATH", "/webroot/mswitchcomb;/webroot/switchcomb");
       break;
 
     case "test":
@@ -34,7 +36,8 @@
       define("SC_DBPWD", "scmessageboard");
       define("SC_PAGETITLEBASE", "switchcomb");
       define("SC_CANEMAIL", true);
-      define("SCBASEPATH", "/webroot/switchcomb");
+      define("SC_MSGSOURCE", "web");
+      define("SCINCLUDEPATH", "/webroot/switchcomb");
       break;
 
     case "mobiletest":
@@ -45,7 +48,8 @@
       define("SC_DBPWD", "scmessageboard");
       define("SC_PAGETITLEBASE", "mobile switchcomb");
       define("SC_CANEMAIL", true);
-      define("SCBASEPATH", "/webroot/switchcomb");
+      define("SC_MSGSOURCE", "mobile web");
+      define("SCINCLUDEPATH", "/webroot/switchcomb");
       break;
 
     case "production":
@@ -56,7 +60,8 @@
       define("SC_DBPWD", "scmessageboard");
       define("SC_PAGETITLEBASE", "switchcomb");
       define("SC_CANEMAIL", true);
-      define("SCBASEPATH", "/webroot/switchcomb");
+      define("SC_MSGSOURCE", "web");
+      define("SCINCLUDEPATH", "/webroot/switchcomb");
       break;
 
     case "mobileproduction":
@@ -67,13 +72,16 @@
       define("SC_DBPWD", "scmessageboard");
       define("SC_PAGETITLEBASE", "mobile switchcomb");
       define("SC_CANEMAIL", true);
-      define("SCBASEPATH", "/webroot/switchcomb");
+      define("SC_MSGSOURCE", "mobile web");
+      define("SCINCLUDEPATH", "/webroot/switchcomb");
       break;
   }
   
   
-  $inc_path = array_merge(array(get_include_path()),explode(";",SCBASEPATH));
+  $inc_path = array_merge(array(get_include_path()),explode(";",SCINCLUDEPATH));
   set_include_path(implode(PATH_SEPARATOR,$inc_path));
 
+  $base_path = explode(";",SCINCLUDEPATH);
+  define("SCBASEPATH", $base_path[sizeof($base_path)-1]);
 
 ?>

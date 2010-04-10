@@ -1,4 +1,5 @@
 <?php
+  require_once "config/environment.php";
 	require_once "sc_lib.php";
   
   try {
@@ -21,7 +22,7 @@
     $_GET = array_merge($_GET, $route_parts);
     //var_dump($route_parts);
   
-    $controller_file = "controllers/".$route_parts["controller"].".php";
+    $controller_file = SCBASEPATH."/controllers/".$route_parts["controller"].".php";
     if (file_exists($controller_file)) {
       require_once($controller_file);
       if($controller) {

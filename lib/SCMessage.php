@@ -46,7 +46,7 @@ class SCMessage extends SCBase {
 		$this->authorid = null;
 		$this->authoringuser = null;
 		$this->nsfw = null;
-    $this->source = "web";
+    $this->source = SC_MSGSOURCE;
   }
   
   private function loadInfo($messageid, $count=false) {
