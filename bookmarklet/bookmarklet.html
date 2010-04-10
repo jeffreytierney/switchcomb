@@ -1,0 +1,21 @@
+<html>
+<head>
+</head>
+<body>
+	<a href="javascript:{
+		var id = 'scbookmarklet';
+		if(document.getElementById(id)) {
+			document.getElementById(id).parentNode.removeChild(document.getElementById(id));
+		}
+		var s = document.createElement('script');
+		s.setAttribute('src', 'http://www.switchcomb.com/bookmarklet/js/bookmarklet.js');
+		s.setAttribute('type', 'text/javascript');
+		s.setAttribute('id', id);
+		document.getElementsByTagName('head')[0].appendChild(s);
+		
+		undefined;
+
+	}">switchmarklet</a>
+
+</body>
+</html>

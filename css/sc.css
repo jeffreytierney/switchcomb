@@ -1,0 +1,306 @@
+body {
+	margin:0 10px;
+	padding:0;
+	font-family: helvetica, verdana, arial, sans-serif;
+	font-size: 12px;
+}
+
+h1, h2, h3 {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	font-size: 20px;
+	margin:0 0 10px 0;
+}
+
+h2 {
+	font-size: 16px;
+}
+
+h3 {
+	font-size: 14px;
+}
+
+#header {
+	width: 100%;
+	border-bottom:1px solid #dcdcdc;
+	position: relative;
+	margin:0px 0 10px 0;
+}
+
+#login {
+	float:left;
+	
+}
+
+#register {
+	float:left;
+	border-left:1px solid #dcdcdc;
+	padding:0 0px 0 30px;
+	margin:0px 0 0 30px;
+}
+
+#login h1, #register h1 {
+	margin:0 0 18px 0 !important;
+}
+
+#register p, #login p {
+	margin:10px 0;
+}
+
+#register label, #login label {
+	width:150px;
+	display:block;
+	float:left;
+}
+
+#register input, #register input {
+	float:left;
+}
+
+#links {
+	position:absolute;
+	top:33px;
+	left:350px;
+	white-space:nowrap;
+	overflow:hidden;
+	z-index:25;
+}
+
+#links a {
+	margin:0 10px 0 0;
+}
+
+#pagecontainer {
+	position: absolute;
+	width:95%;
+}
+
+#pagecontainer form h3 {
+	padding: 0;
+	margin: 5px 0px;
+}
+
+#loggedin {
+	position: absolute;
+	top:5px;
+	right: 5px;
+	font-size: 11px;
+}
+
+#login input {
+	font-size: 10px;
+}
+
+/* need to add */
+.clearfix:after{
+	content: ".";
+	display: block;
+	height:0;
+	line-height: 0;
+	clear:both;
+	visibility: hidden;
+}
+/* Hides from IE-mac\*/
+* html .clearfix {height: 1%;}
+/*End hide from IE-mac */
+
+
+.hidden {
+	display: none;
+}
+
+div.util_links {
+	height: 20px;
+	line-height: 20px;
+}
+
+#boardset {
+	border: 1px solid #DCDCDC;
+	width: 65%;
+}
+
+#boardset div.boardset_board {
+	border-bottom: 1px dotted #DCDCDC;
+}
+
+#boardset div.boardset_boardheader {
+	background-color: #efefef;
+	padding:5px;
+}
+
+#boardset div.boardset_boardname {
+	float: left;
+	font-size:16px;
+}
+
+#boardset div.boardset_boardactivity {
+	float: right;
+	font-size:12px;
+	color:#898989;
+	line-height:16px;
+}
+
+.boardset_boardthread {
+	padding:2px 5px 2px 6px;
+}
+
+#boardset div.boardset_boardthread_subject {
+	float: left;
+	font-size:20px;
+}
+
+#boardset div.boardset_boardthread_replies {
+	float: right;
+	font-size:20px;
+}
+
+#boardset div.boardset_boardcreator {
+	float: right;
+}
+
+#board {
+	
+	border: 1px dotted #DCDCDC;
+}
+
+#board_header {
+	height: 20px;
+	line-height: 20px;
+	background-color: #DCDCDC;
+}
+
+#board_header div {
+	float: left;
+}
+
+.boarditem {
+	height: 20px;
+	line-height: 20px;
+	border-bottom: 1px dotted #DCDCDC;
+}
+
+.boarditemlast {
+	border-bottom: 0px;
+}
+
+div.boarditem:hover {
+	background-color: #DCDCDC;
+}
+
+div.boarditemmouseover {
+	background-color: #DCDCDC;
+}
+
+.boarditem div {
+	float: left;
+}
+
+.board_threadname {
+	width: 49%;
+}
+
+.board_threadcreatedby {
+	width: 15%;
+}
+
+.board_threadcreatedate {
+	width: 20%;
+}
+
+.board_threadreplies {
+	text-align: right;
+	width: 15%;
+}
+
+.add_message {
+	background-color: #DCDCDC;
+	position: absolute;
+	padding: 5px 20px 20px 20px;
+	top: 100px;
+	left: 15%;
+	width: 60%;
+}
+
+.add_message_subject {
+	width: 100%;
+	display: block;
+}
+
+.add_message_text {
+	width: 100%;
+	height: 250px;
+	display: block;
+}
+
+
+#buttons{
+	position: absolute;
+	right: 15px;
+}
+
+a.linkbutton {
+	display: block;
+	float: left;
+	border: 1px solid black;
+	margin-right: 5px;
+	line-height: 16px;
+	height: 16px;
+	padding: 0px 10px;
+	background-color: #FFFFFF;
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+a.linkbutton:hover {
+	background-color: #EFEFEF;
+}
+div.message {
+	position: relative;
+	margin: 5px 0;
+}
+
+div.message div.message_content {
+	border: 1px dotted #DCDCDC;
+	padding: 3px;
+}
+
+div.message div.changed_subject {
+	font-style: italic;
+}
+
+div.message div.message_info {
+	text-align: right;
+	float:right;
+	color: #ACACAC;
+}
+
+div.message div.message_options {
+	height: 14px;
+	text-align: right;
+}
+
+div.message div.message_options_content {
+	display: none;
+}
+div.message:hover div.message_options_content {
+	display: block;
+}
+
+
+div.message div.message_author {
+	float: left;
+	margin-left: 5px;
+}
+
+div.message div.message_source {
+	float: left;
+	margin-left: 5px;
+}
+
+div.message div.message_date {
+	float: left;
+}
