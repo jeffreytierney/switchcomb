@@ -1,13 +1,12 @@
 <?php
 
 require_once "../sc_lib.php";
-SC::updateSessionUser();
-$current_user->hideboards = false;
-echo $current_user->jsonify();
-$current_user->createMembership(37);
-SC::updateSessionUser();
-echo "<br/><br/><br/>";
-echo $current_user->jsonify();
+
+$thread = new SCThread(7951);
+
+$thread->getMessages(false);
+
+echo $thread->jsonify();
 
 /*
 $route = SCRoutes::routeToRegex("/boards/:boardid/thread/:threadid");

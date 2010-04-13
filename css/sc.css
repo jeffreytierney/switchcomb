@@ -161,7 +161,7 @@ div.util_links {
 	float: right;
 }
 
-#board {
+.board {
 	
 	border: 1px dotted #DCDCDC;
 }
@@ -303,4 +303,11 @@ div.message div.message_source {
 
 div.message div.message_date {
 	float: left;
+}
+
+
+/* new stuff to keep on redo */
+.boarditem.new .board_threadname a {
+  padding-right: 50px;
+  background: transparent url(/images/new.png) no-repeat scroll right top;
 }

@@ -148,6 +148,12 @@ class SC {
   static function imagePath($image) {
 		return SC::root()."images/$image";
 	}
+  static function cssPath($css) {
+		return SC::root()."css/$css.css";
+	}
+  static function jsPath($js) {
+		return SC::root()."js/$js.js";
+	}
   
   static function setFlashMessage($message, $status="info") {
     session_start();

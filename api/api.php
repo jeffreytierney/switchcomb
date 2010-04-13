@@ -1,6 +1,8 @@
 <?php
 
-require_once '../sc_lib.php';
+if(file_exists('../sc_lib.php')) {
+  require_once '../sc_lib.php';
+}
 
 function api_call() {
   try { 

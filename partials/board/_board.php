@@ -1,5 +1,5 @@
 <?php if(sizeof($board->threads())): ?>
-  <div id="board">
+  <div id="board_<?php echo $board->boardid; ?>" class="board">
 
     <div id="board_header" class="clearfix">
       <div class="board_threadname header">

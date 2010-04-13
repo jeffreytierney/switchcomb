@@ -5,7 +5,7 @@
     <div class="message_options">
       <ul class="message_options_content">
         <li>
-          <a href="<?php $threadid = $message->threadid or $threadid = $message->messageid; echo SCRoutes::set("messages", "_new", array("boardid"=>$message->boardid, "threadid"=>$threadid)); ?>">Reply</a>
+          <a class="reply_link" href="<?php $threadid = $message->threadid or $threadid = $message->messageid; echo SCRoutes::set("messages", "_new", array("boardid"=>$message->boardid, "threadid"=>$threadid)); ?>">Reply</a>
         </li>
       </ul>
     </div>

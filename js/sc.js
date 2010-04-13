@@ -544,4 +544,3 @@ SC.util.callHook = function(which) {
   }
   return this;
 };
-

@@ -89,6 +89,10 @@ class SCRoutes {
       "memberships_index"=>array(
         "route"=>"/users/:userid/memberships",
         "method"=>"GET"
+      ),
+      "memberships_boardcounts"=>array(
+        "route"=>"/users/:userid/memberships/counts",
+        "method"=>"GET"
       )
     ),
     "memberships"=>array(
@@ -100,13 +104,13 @@ class SCRoutes {
         "route"=>"/users/:userid/memberships/:boardid",
         "method"=>"DELETE"
       ),
-      "update"=>array(
-        "route"=>"/users/:userid/memberships/:boardid",
-        "method"=>"POST"
-      ),
       "create"=>array(
         "route"=>"/users/:userid/memberships/:boardid",
         "method"=>"PUT"
+      ),
+      "update"=>array(
+        "route"=>"/users/:userid/memberships/:boardid",
+        "method"=>"POST"
       )
     ),
     "messages"=>array(

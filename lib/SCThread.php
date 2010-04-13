@@ -33,7 +33,8 @@ class SCThread extends SCMessage {
 	protected function setNull() {
 		parent::setNull();
     $this->message_count = 0;
-		$this->messageset = array();
+		//$this->messageset = array();
+    $this->messageset = null;
 	}
   
 	
@@ -59,7 +60,7 @@ class SCThread extends SCMessage {
   
   public function messages() {
     if(!$this->hidemessages) {
-      if($this->messageset && is_array($this->messageset)) {
+      if($this->messageset !== null && is_array($this->messageset)) {
         return $this->messageset;
       }
       else {
@@ -80,7 +81,7 @@ class SCThread extends SCMessage {
     $sql = "SELECT * FROM messages m, users u WHERE (m.msg_id=".$this->messageid." OR m.msg_thread=".$this->messageid.") AND u.user_id=m.msg_author $sinceclause ORDER BY m.msg_id ASC $limitclause";
     $db = new SCDB();
 		$threadinfo = $db->queryArray($sql);
-    
+    $this->messageset = array();
     foreach($threadinfo as $id=>$msg) {
       $this->messageset[] = new SCMessage($msg);
     }
@@ -211,6 +212,7 @@ class SCThread extends SCMessage {
 		if(sizeof($hasMessage) && $hasMessage[0]["msg_id"] == $messageid) return true;
 		else return false;
 	}
+  /*
 	// TODO: get rid of
 	public function loadMessages($threadid, $since=false) {
 		$sinceclause = "";
@@ -238,6 +240,7 @@ class SCThread extends SCMessage {
 		}
 		return $messages;
 	}
+  */
 
   public function toArray() {
     $props = parent::toArray();

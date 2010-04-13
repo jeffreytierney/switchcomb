@@ -198,6 +198,32 @@ class SCApi {
     return $user->loadMemberships()->memberships();
   }
   
+  public function users_memberships_boardcounts($params = null) { // aka register
+    if($params && isset($params["__partial"])) return null;
+    
+    if($params === null) {
+      $this->requireRequestType("GET");
+      $params = $_GET;
+    }
+    $current_user = $this->requireLogin("You must be logged in to view your memberships");
+    $userid = $params["userid"];
+    if(!$userid) {
+      throw new APIException("No User id specified", 401);
+    }
+    
+    if(intval($userid) != intval($current_user->userid)) {
+      throw new APIException("You may only view your own memebrships", 403);
+    }
+    
+    $user = new SCUser($userid);
+    $user_memberships = array("memberships"=>array());
+    $mems = $user->loadMemberships()->memberships();
+    foreach($mems as $mem_id=>$mem) {
+      $user_memberships["memberships"][] = $this->boards_show(array("boardid"=>$mem->boardid));
+    }
+    return $user_memberships;
+  }
+  
   public function users_memberships_show($params = null) { // aka register
     if($params && isset($params["__partial"])) return null;
     

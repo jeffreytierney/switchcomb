@@ -8,9 +8,14 @@ class SCBoardsController {
     
     switch ($_GET["__content_type"]) {
       case "json":
-          $output = array(
-            "content"=>SCPartial::renderToString("board/board_threads", $vars)
-          );
+          if($_GET["since"]) {
+            $output = array(
+              "content"=>SCPartial::renderToString("board/board_threads", $vars)
+            );
+          }
+          else {
+            $output = array("threads"=>$vars["board"]->threads());
+          }
           echo SC::jsonify($output);
         break;
       case "html":

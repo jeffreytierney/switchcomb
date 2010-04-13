@@ -5,7 +5,7 @@
   switch(SC_ENVIRONMENT) {
   
     case "development":
-      define("SC_ROOT", "/switchcomb/");
+      define("SC_ROOT", "/");
       define("SC_DBSERVER", "127.0.0.1");
       define("SC_DBSCHEMA", "sc_mb");
       define("SC_DBUSER", "sc_mb");
@@ -18,7 +18,7 @@
       break;
    
     case "mobiledevelopment":
-      define("SC_ROOT", "/mswitchcomb/");
+      define("SC_ROOT", "/");
       define("SC_DBSERVER", "127.0.0.1");
       define("SC_DBSCHEMA", "sc_mb");
       define("SC_DBUSER", "sc_mb");
