@@ -14,7 +14,7 @@ SC.Updater.prototype = {
     this.orig_memberships = [];
     this.memberships = {};
     this.updater_index = 0;
-    this.poll_interval = 10000;
+    this.poll_interval = 30000;
     return this;
   },
   loadMemberships: function(inital_load) {
