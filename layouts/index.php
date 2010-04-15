@@ -20,6 +20,7 @@
           <?php SCPartial::render("index/logged_in_nocontent"); ?>
         <?php endif; ?>
 			<?php endif; ?>
+      <?php SCPartial::render("shared/notifier"); ?>
 		</div>
 	</body>
 </html>

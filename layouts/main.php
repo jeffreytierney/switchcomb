@@ -14,7 +14,7 @@
 			
 			<?php SCLayout::yield("util_links"); ?>
       <?php SCLayout::yield("content"); ?>
-      
+      <?php SCPartial::render("shared/notifier"); ?>
 		</div>
 	</body>
 </html>

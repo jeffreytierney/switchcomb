@@ -2,11 +2,7 @@
 
 require_once "../sc_lib.php";
 
-$thread = new SCThread(7951);
-
-$thread->getMessages(false);
-
-echo $thread->jsonify();
+echo SCRoutes::set("users", "memberships_index", array("userid"=>1,"something"=>"else","another"=>"hooha"));
 
 /*
 $route = SCRoutes::routeToRegex("/boards/:boardid/thread/:threadid");

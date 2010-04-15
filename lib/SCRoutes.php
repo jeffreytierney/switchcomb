@@ -199,12 +199,16 @@ class SCRoutes {
       
       for ($i=0;$i<sizeof($route_parts);$i++) {
         if(strpos($route_parts[$i], ":") === 0) {
-          $route_parts[$i] = $params[ltrim($route_parts[$i],":")];
-          unset($params[ltrim($route_parts[$i],":")]);
+          $key = ltrim($route_parts[$i],":");
+          $route_parts[$i] = $params[$key];
+          unset($params[$key]);
         }
       }
       
       $url = implode("/", $route_parts);
+      if(sizeof($params)) {
+        $url .= "?".http_build_query($params);
+      }
       return str_replace("//", "/", SC::root().$url);
     }
     else {
