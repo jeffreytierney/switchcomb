@@ -15,6 +15,7 @@
       define("SC_MSGSOURCE", "web");
       define("SC_IS_MOBILE", false);
       define("SCINCLUDEPATH", "/webroot/switchcomb");
+      define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@t.switchcomb.com");
       break;
    
     case "mobiledevelopment":
@@ -28,6 +29,7 @@
       define("SC_MSGSOURCE", "mobile web");
       define("SC_IS_MOBILE", true);
       define("SCINCLUDEPATH", "/webroot/mswitchcomb;/webroot/switchcomb");
+      define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@t.switchcomb.com");
       break;
 
     case "test":
@@ -41,6 +43,7 @@
       define("SC_MSGSOURCE", "web");
       define("SC_IS_MOBILE", false);
       define("SCINCLUDEPATH", "/home/jeffr28/public_html/tswitchcomb");
+      define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@t.switchcomb.com");
       break;
 
     case "mobiletest":
@@ -54,6 +57,7 @@
       define("SC_MSGSOURCE", "mobile web");
       define("SC_IS_MOBILE", true);
       define("SCINCLUDEPATH", "/home/jeffr28/public_html/mtswitchcomb;/home/jeffr28/public_html/tswitchcomb");
+      define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@t.switchcomb.com");
       break;
 
     case "production":
@@ -67,6 +71,7 @@
       define("SC_MSGSOURCE", "web");
       define("SC_IS_MOBILE", false);
       define("SCINCLUDEPATH", "/home/jeffr28/public_html/switchcomb");
+      define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@boards.switchcomb.com");
       break;
 
     case "mobileproduction":
@@ -80,6 +85,7 @@
       define("SC_MSGSOURCE", "mobile web");
       define("SC_IS_MOBILE", true);
       define("SCINCLUDEPATH", "/home/jeffr28/public_html/mswitchcomb;/home/jeffr28/public_html/switchcomb");
+      define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@boards.switchcomb.com");
       break;
   }
   

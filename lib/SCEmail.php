@@ -33,7 +33,7 @@ class SCEmail {
     
     $mail->headers = "From: " . $mail->from . "\r\n".
                      "Bcc: " . $mail->bcc . "\r\n".
-                     "Reply-To: " . SC_MESSAGE_EMAIL_FROM_ADDRESS . "\r\n" .
+                     "Reply-To: " . str_replace(":boardid", $message->boardid, SC_MESSAGE_EMAIL_FROM_ADDRESS) . "\r\n" .
                      "X-Mailer: PHP/" . phpversion();
     
     
@@ -51,10 +51,10 @@ class SCEmail {
     $mail->body = $message = "You have been invited to join the following board on switchcomb.com\n" . 
 				$invite->board()->boardname . 
 				"\n\n" . 
-				"Click on the following link to join:\n" . 
-				"http://www.switchcomb.com/acceptinvite.php?invitecode=".$invite->hash."\n\n" .
-				"Or, if you are on a mobile device, click the following mobile friendly link:\n" . 
-				"http://m.switchcomb.com/acceptinvite.php?invitecode=".$invite->hash."\n\n";; //mail body
+				"Click on the following link to join:\n" .
+        "http://switchcomb.com".SCRoutes::set("boards", "invitations_redeem", array("invitecode"=>$invite->hash))."\n\n" .
+				"Or, if you are on a mobile device, click the following mobile friendly link:\n" .
+        "http://m.switchcomb.com".SCRoutes::set("boards", "invitations_redeem", array("invitecode"=>$invite->hash))."\n\n" .
         
     $mail->subject = "switchcomb.com board invitation"; //subject
     

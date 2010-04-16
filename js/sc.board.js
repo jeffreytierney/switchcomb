@@ -14,7 +14,7 @@ SC.Updater.prototype = {
     this.orig_memberships = [];
     this.memberships = {};
     this.updater_index = 0;
-    this.poll_interval = 10000;
+    this.poll_interval = 30000;
     return this;
   },
   loadMemberships: function(inital_load) {
@@ -103,35 +103,51 @@ SC.Notifier.prototype = {
   bindEvents: function() {
     var _this = this;
     SC.CustomEvents.listen("sc_new_messages", function(data) {
-      var found = false;
+      var found_board = false;
+      var found_thread = false;
       for (var i=0, len=SC.data.boards.length; i<len; i++) {
         if(SC.data.boards[i].boardid == data.boardid) {
-          found=true;
+          found_board=true;
         }
       }
       for (var i=0, len=SC.data.threads.length; i<len; i++) {
         if(SC.data.threads[i].threadid == data.threadid) {
-          found=true;
+          found_thread=true;
+        }
+        if(SC.data.threads[i].boardid == data.boardid) {
+          found_board=true;
         }
       }
-      if(!found) {
+      //if(!found_board) {
         
         if(data.msg_count === 0) {
+          var message = "New Thread ("+data.threadsubject+") Created in ";
+          message += (found_board ? "this board" : "Board " + data.boardname);
+          
           _this.notification_center.addNotification({
-            message: "New Thread Created in Board " + data.boardname + " - " + data.threadsubject,
+            message: message,
             id: data.boardid + "_"+ data.threadid
           });
         }
         else {
           var new_msg_count = (data.msg_count-data.view_count);
-          _this.notification_center.addNotification({
-            message: new_msg_count + " New Message" + ((new_msg_count>1) ? "s" : "") + " in board " + data.boardname + ", thread: " + data.threadsubject,
-            id: data.boardid + "_"+ data.threadid
-          });
+          if(new_msg_count) {
+            var message = new_msg_count + " New Message" + ((new_msg_count>1) ? "s" : "") + " in ";
+            message += (found_thread ? "this thread" : "thread: " + data.threadsubject);
+            if(!found_thread) {
+              message += " in " + (found_board ? "this board" : "board " + data.boardname);
+            }
+            _this.notification_center.addNotification({
+              message: message,
+              id: data.boardid + "_"+ data.threadid
+            });
+          }
         }
-      }
+      //}
     });
-    
+    SC.CustomEvents.listen("sc_notification_center_update", function(data) {
+      SC.util.setTitleNotifications(data.length);
+    });
     return this;
   }
 }
@@ -145,12 +161,19 @@ SC.NotificationCenter.prototype = {
   init: function(el) {
     this.el = $(el);
     this.initData();
+    this.bindEvents();
     return this;
   },
   initData: function() {
     this.notifications = [];
     this.notifications_by_id = {};
     return this;
+  },
+  bindEvents: function() {
+    var _this = this;
+    SC.CustomEvents.listen("sc_remove_notification", function(data) {
+      _this.removeNotification(data);
+    });
   },
   addNotification: function(message_obj) {
     
@@ -163,7 +186,21 @@ SC.NotificationCenter.prototype = {
         this.notifications_by_id[message_obj.id] = id;
       }
     }
+    this.fireUpdate();
     return this;
+  },
+  removeNotification: function(id) {
+    if(this.notifications_by_id.hasOwnProperty(id)) {
+      var idx = this.notifications_by_id[id];
+      this.notifications = SC.util.removeArrayItem(this.notifications, idx);
+      delete this.notifications_by_id[id];
+      // TODO: maybe some cleanup on this to make sure that the notification is destroyed
+    }
+    this.fireUpdate();
+    return this;
+  },
+  fireUpdate: function() {
+    SC.CustomEvents.fire("sc_notification_center_update", this.notifications);
   }
 }
 
@@ -175,9 +212,13 @@ SC.Notification = function(message_obj) {
 
 SC.Notification.prototype = {
   constructor: SC.Notification.prototype.constructor,
+  duration: 10000,
   init: function(message_obj) {
     this.container = $("#notifier");
     this.in_doc = false;
+    message_obj.duration = message_obj.hasOwnProperty("duration") ? message_obj.duration : this.duration;
+    this.message_obj = message_obj;
+    this.display_timer = false;
     this.createEl(message_obj);
     this.bindEvents();
     return this;
@@ -191,15 +232,22 @@ SC.Notification.prototype = {
     this.message = $(document.createElement("p")).addClass("notification_message").html(message_obj.message);
     this.container.append(this.el.append(this.close).append(this.message));
     this.in_doc = true;
+    this.appear();
     return this;
   },
   bindEvents: function() {
     var _this = this;
     this.close.bind("click", function() {
-      _this.el.remove();
+      _this.remove();
       _this.in_doc = false;
-      //_this.clear();
+      return false;
     });
+    
+    if(this.message_obj.duration) {
+      this.display_timer = setTimeout(function() {
+        _this.remove();
+      }, this.duration);
+    }
     
     return this;
   },
@@ -209,10 +257,24 @@ SC.Notification.prototype = {
       this.container.append(this.el);
       this.bindEvents();
       this.in_doc = true;
+      this.appear();
     }
     else {
       this.el.show();
     }
+  },
+  appear: function() {
+    this.el.hide().fadeIn();
+    return this;
+  },
+  remove: function() {
+    clearTimeout(this.display_timer);
+    this.el.fadeOut(function() {
+      $(this).css("visibility", "hidden").show().slideUp(function() {
+        $(this).remove().attr("style", "");
+      })
+    });
+    return this;
   }
 }
 
@@ -224,6 +286,7 @@ SC.Board = function(el) {
 
 SC.Board.prototype = {
   constructor: SC.Board.prototype.constructor,
+  post_callback_event: "sc_board_newthread",
   init: function(el) {
     this.el = $(el);
     this.initData();
@@ -239,10 +302,13 @@ SC.Board.prototype = {
     this.threads_by_id = {};
     this.newest_thread = 0;
     this.thread_item_prefix = "thread_";
+    this.post_callback_event += "_"+this.el.attr("id");
   },
   cacheElements: function() {
     this.els.threadListContainer = this.el.find("#board_threads");
     this.els.threadList = this.els.threadListContainer.find(".boarditem");
+    this.els.create_thread_link = $("#create_thread_link");
+    this.create_thread_form = new SC.ReplyCreateForm(this.els.create_thread_link.attr("href"), this.post_callback_event);
     return this;
   },
   dataFromElements: function() {
@@ -278,6 +344,18 @@ SC.Board.prototype = {
         _this.loadThreads();
       }
     });
+    
+    SC.CustomEvents.listen(this.post_callback_event, function(data) {
+      if(data && data.transfer) {
+        location.href=data.transfer;
+      }
+    });
+    
+    this.els.create_thread_link.bind("click", function() {
+      _this.create_thread_form.show();
+      return false;
+    });
+    
     return this;
   },
   checkSetNewest: function(threadid) {
@@ -325,6 +403,7 @@ SC.Thread = function(el) {
 
 SC.Thread.prototype = {
   constructor: SC.Thread.prototype.constructor,
+  post_callback_event: "sc_thread_loadnew",
   init: function(el) {
     this.el = $(el);
     this.initData();
@@ -340,6 +419,8 @@ SC.Thread.prototype = {
     this.messages_by_id = {};
     this.newest_message = 0;
     this.message_item_prefix = "message_";
+    this.post_callback_event += "_"+this.el.attr("id");
+    this.reply_form = new SC.ReplyCreateForm(this.el.find(".reply_link").first().attr("href"), this.post_callback_event);
   },
   cacheElements: function() {
     this.els.messageListContainer = this.el.find("#messages");
@@ -376,12 +457,25 @@ SC.Thread.prototype = {
     SC.CustomEvents.listen("sc_new_messages_board_"+this.boardid+"_thread_"+this.threadid, function(data) {
       //SC.util.log(JSON.stringify(data));
       var count = data.msg_count - data.view_count;
-      _this.showLoadMore(count);
+      if(count) {
+        _this.showLoadMore(count);
+      }
+    });
+    
+    SC.CustomEvents.listen(this.post_callback_event, function() {
+      _this.loadmore_link.click();
     });
     
     this.loadmore_link.bind("click", function() {
       _this.loadMessages();
       return false;
+    });
+    
+    this.els.messageListContainer.bind('click', function(e) {
+      if($(e.target).hasClass("reply_link")) {
+        _this.reply_form.show();
+        return false;
+      }
     });
     return this;
   },
@@ -393,6 +487,7 @@ SC.Thread.prototype = {
   showLoadMore: function(count) {
     this.loadmore_count.html(count);
     this.loadmore.show();
+    SC.util.addCountToTitle(count);
   },
   hideLoadMore: function() {
     this.loadmore_count.html(0);
@@ -410,6 +505,8 @@ SC.Thread.prototype = {
     if(data && data.content) {
       this.els.messageListContainer.append(data.content);
       this.cacheElements().dataFromElements();
+      SC.util.addCountToTitle(0);
+      SC.CustomEvents.fire("sc_remove_notification", this.boardid+"_"+this.threadid);
     }
     this.hideLoadMore();
     return this;
@@ -423,6 +520,127 @@ SC.Thread.prototype = {
   _idFromKey: function(key) {
     return parseInt(key.replace(this.message_item_prefix, ""), 10);
   }
+}
+
+SC.ReplyCreateForm = function(url, custom_event) {
+  this.init(url, custom_event);
+}
+
+SC.ReplyCreateForm.prototype = {
+  constructor: SC.ReplyCreateForm.prototype.constructor,
+  init: function(url, custom_event) {
+    this.load_url = url;
+    this.el_id = custom_event;
+    this.el = null;
+    this.custom_event = custom_event;
+    this.loadEl(true);
+  },
+  cacheElements: function() {
+    this.form = this.el.find("form");
+    this.submit = this.form.find("input#btn_create");
+    return this;
+  },
+  insertElements: function() {
+    this.loading = $(document.createElement("span")).addClass("loading").addClass("small").html("Posting...");
+    this.cancel = $(document.createElement("input")).attr("type", "button").attr("id", "btn_cancel").val("Cancel");
+    this.form.append(this.loading).append(this.cancel);
+    return this;
+  },
+  bindEvents: function() {
+    var _this = this;
+    this.form.bind("submit", function() {
+      _this.submit.hide();
+      _this.cancel.hide();
+      _this.loading.show();
+      _this.post();
+      _this.form.find("input, textarea").attr("disabled","true");
+      return false;
+    });
+    
+    this.cancel.bind("click", function() {
+      _this.hide();
+      return false;
+    });
+    return this;
+  },
+  loadEl: function(dont_show) {
+    var _this = this;
+    SC.ajax.GET({
+      url: this.load_url,
+      success: function(data) {
+        _this.createEl(data, dont_show);
+      },
+      error: SC.ReplyCreateForm.prototype.fallback,
+      scope: this
+    });
+    return this;
+  },
+  createEl: function(data, dont_show) {
+    if(data && data.content) {
+      this.el = $(document.createElement("div")).attr("id", this.el_id).addClass("sc_create_reply");
+      this.el.append(data.content);
+      $("body").append(this.el);
+      this.cacheElements().insertElements().bindEvents();
+      if(!dont_show) {
+        this.show();
+      }
+    }
+    return this;
+  },
+  fallback: function(xhr) {
+    alert(xhr.responseText);
+    return this;
+  },
+  show: function() {
+    if(this.el) {
+      this.el.fadeIn();
+    }
+    else {
+      this.loadEl();
+    }
+    return this;
+  },
+  hide: function() {
+    var _this = this;
+    if(this.el) {
+      this.el.fadeOut(function() {
+        _this.submit.show();
+        _this.cancel.show();
+        _this.loading.hide();
+        _this.form.find("input, textarea").attr("disabled",null);
+        _this.form.get(0).reset();
+      });
+    }
+    return this;
+  },
+  post: function() {
+    var _this = this;
+    var submit_params = {
+      success: function(data) {
+        _this.postSuccess(data);
+      },
+      error: function(xhr) {
+        _this.postError(xhr);
+      },
+      dataType:"json"
+    };
+    this.form.ajaxSubmit(submit_params);
+    return this;
+  },
+  postSuccess: function(data) {
+    if(this.custom_event) {
+      SC.CustomEvents.fire(this.custom_event, data);
+    }
+    this.hide();
+    
+    return this;
+  },
+  postError: function(xhr) {
+    alert(xhr.reponsetext);
+    this.hide();
+    return this;
+  }
+  
 }
 
 $(function() {

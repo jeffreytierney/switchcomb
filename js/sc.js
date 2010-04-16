@@ -159,6 +159,48 @@ SC.util.stripQueryString = function(str) {
   return str;
 }
 
+SC.util.addCountToTitle = function(new_count) {
+  var old_title = $("title").html();
+  if(new_count) {
+    var plus = (old_title.slice(0,2) === "+ ") ? "+ " : "";
+    if(plus !== "") {
+      old_title = old_title.slice(2);
+    }
+    var new_title = plus + "(" + new_count + ") " + old_title.replace(/\([0-9\+]+\)/g, "");
+  }
+  else {
+    var new_title = old_title.replace(/\([0-9\+]+\)/g, "");
+  }
+  $("title").html(new_title);
+  return new_title;
+}
+
+SC.util.setTitleNotifications = function(has_notifs) {
+  var old_title = $("title").html();
+  var plus = (old_title.slice(0,2) === "+ ");
+  if(has_notifs) {
+    if(plus) {
+      return;
+    }
+    else {
+      $("title").html("+ "+old_title);
+      return;
+    }
+  }
+  if(!has_notifs) {
+    if(plus) {
+      $("title").html(old_title.slice(2));
+      return;
+    }
+    else {
+      return;
+    }
+  }
+}
+
+SC.util.removeArrayItem = function(arr, index_to_remove) {
+  return arr.slice(0,index_to_remove).concat(arr.slice(index_to_remove+1));
+}
 /************************************************************************************************************************************
 SC.ajax
 ************************************************************************************************************************************/

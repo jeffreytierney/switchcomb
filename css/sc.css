@@ -74,8 +74,9 @@ h3 {
 }
 
 #pagecontainer {
-	position: absolute;
-	width:95%;
+	position: relative;
+	width:94%;
+  padding: 0 2.5%; 
 }
 
 #pagecontainer form h3 {
@@ -310,4 +311,54 @@ div.message div.message_date {
 .boarditem.new .board_threadname a {
   padding-right: 50px;
   background: transparent url(/images/new.png) no-repeat scroll right top;
+}
+
+#loadmore {
+  display: none;
+}
+
+#notifier {
+  position: fixed;
+  top: 25px;
+  right: 50px;
+  width: 200px;
+  z-index: 999999
+}
+
+#notifier .notification {
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  background-color: #444444;
+  color: #FFFFFF;
+  border: 2px solid #CBCBCB;
+}
+
+#notifier .notification .close {
+  position: absolute;
+  display: block;
+  padding: 3px;
+  top: 0px;
+  right: 5px;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+
+.sc_create_reply {
+  display: none;
+  position: fixed;
+  height: 200px;
+  width: 500px;
+  top: 50%;
+  left: 50%;
+  margin-top: -100px;
+  margin-left: -250px;
+  background-color: #444444;
+  color: #FFFFFF;
+  border: 2px solid #CBCBCB;
+}
+
+.loading {
+  display: none;
 }

@@ -158,7 +158,7 @@ class SCMembership extends SCBase {
     $membership = $db->q(
       array("*"),
       array("memberships", "boards", "users"),
-      array("mem_user_id"=>$userid,"mem_board_id"=>$boardid,"brd_id"=>"mem_board_id","mem_user_id"=>"user_id")
+      array("mem_user_id"=>$userid,"mem_board_id"=>$boardid,"brd_id"=>"mem_board_id","user_id"=>"mem_user_id")
     );
     
     if(sizeof($membership)) {

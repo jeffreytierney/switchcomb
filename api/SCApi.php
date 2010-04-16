@@ -520,7 +520,7 @@ class SCApi {
     }
     
     if(intval($membership->userid) != intval($current_user->userid)) {
-      throw new APIException("You may only attempt to delete your own memberships", 403);
+      throw new APIException("You may only attempt to update your own memberships", 403);
     }
     
     $membership->updateAttributes($params)->save();

@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-$from_email="prod";
+//$from_email="prod";
 require_once('sc_lib.php');
 
 // read from stdin
@@ -123,40 +123,46 @@ else {
 if(preg_match($from_re, $from, $matches)) {
 	$from = $matches[1];
 }
-
-if($board_id) {
-	$board = new SCBoard($board_id);
-	if($board->existing) {
-		$user = SCUser::newFromEmail($from);
-		
-		if($user->isExisting()) {
-			$user_id = $user->userid;
-			if($user->isMemberOf($board->boardid)) {
-				if($thread_id) {
-					if($board->hasMessage($thread_id)) {
-						$thread = new SCThread($thread_id);
-						$thread->addMessage($user_id, $thread_id, false, $message, "email");
-					}
-					else {
-						mail($from, "thread $thread_id not in board $board_id", "thread $thread_id not in board $board_id");
-					}
-				}
-				else {
-				
-					$board->addThread($user_id, $subject, $message, "email");
-				}
-			}
-			else {
-				mail($from, "you dont belong to  board $board_id", "you dont belong to  board $board_id");
-			}
-		}
-		else {
-			mail($from, "you are not a user " . $user->userid, $from);
-		}
-	}
-	else {
-		mail($from, "this is not a board " . $board_id, "this is not a board " . $board_id);
-	}
+try {
+  if($board_id) {
+    $board = new SCBoard($board_id);
+    $user = new SCUser($from);
+      
+    $user_id = $user->userid;
+    if($user->isMemberOf($board->boardid)) {
+      if($thread_id) {
+        if($board->hasMessage($thread_id)) {
+          $thread = new SCThread($thread_id);
+          $thread->addMessage(array(
+            "authorid"=>$user_id, 
+            "text"=>$message,
+            "source"=>"email")
+            );
+        }
+        else {
+          throw new Exception("thread $thread_id not in board $board_id");
+        }
+      }
+      else {
+      
+        $board->addThread(array(
+          "authorid"=>$user_id,
+          "subject"=>$subject,
+          "text"=>$message,
+          "source"=>"email")
+        );
+      }
+    }
+    else {
+     throw new Exception("you dont belong to board $board_id");
+    }
+  }
+  else {
+    throw new Exception("no board id was passed");
+  }
+}
+catch (Exception $ex) {
+  mail($from, $ex->getMessage(), $ex->getMessage());
 }
 
 //mail("jeffrey.tierney@gmail.com", "message processed", $email);
