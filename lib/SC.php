@@ -204,11 +204,14 @@ class SC {
   */
   static function handleException($ex) {
     $code = $ex->getCode() or $code = 400;
-    header($ex->getMessage(), true, $code);
+    
     if(in_array($code, array(401,403))) {
       SC::transfer();
     }
-    die($ex->getMessage());
+    else {
+      header($ex->getMessage(), true, $code);
+      die($ex->getMessage());
+    }
   }
 
   static function updateSessionUser() {
