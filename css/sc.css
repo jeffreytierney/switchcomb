@@ -325,6 +325,17 @@ div.message div.message_date {
   z-index: 999999
 }
 
+#notification_badge {
+  display: block;
+  position: relative;
+  height: 30px;
+  width: 30px;
+}
+
+#notification_badge_count {
+  color: #830257;
+}
+
 #notifier .notification {
   position: relative;
   width: 100%;

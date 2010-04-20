@@ -14,7 +14,7 @@ SC.Updater.prototype = {
     this.orig_memberships = [];
     this.memberships = {};
     this.updater_index = 0;
-    this.poll_interval = 30000;
+    this.poll_interval = 20000;
     return this;
   },
   loadMemberships: function(inital_load) {
@@ -153,14 +153,19 @@ SC.Notifier.prototype = {
 }
 
 
-SC.NotificationCenter = function(el) {
-  this.init(el);
+SC.NotificationCenter = function(el, badge) {
+  this.init(el, badge);
 }
 SC.NotificationCenter.prototype = {
   constructor: SC.NotificationCenter.prototype.constructor,
-  init: function(el) {
+  init: function(el, badge) {
     this.el = $(el);
     this.initData();
+    this.has_badge = false;
+    if(badge) {
+      this.has_badge = true;
+      this.setupBadge();
+    }
     this.bindEvents();
     return this;
   },
@@ -169,11 +174,38 @@ SC.NotificationCenter.prototype = {
     this.notifications_by_id = {};
     return this;
   },
+  setupBadge: function() {
+    this.badge_el = $(document.createElement("a")).attr("id", "notification_badge").attr("href", "#notifications");;
+    this.badge_el_count = $(document.createElement("span")).attr("id", "notification_badge_count");
+    this.badge_el.append(this.badge_el_count);
+    this.el.prepend(this.badge_el);
+    
+    var _this = this;
+    SC.CustomEvents.listen("sc_notification_center_update", function(data) {
+      _this.badge_el_count.html(data.length);
+      if(data.length) {
+        _this.badge_el.show();
+      }
+      else {
+        _this.badge_el.hide();
+      }
+    });
+    
+    this.badge_el.bind("click", function() {
+      _this.showAllNotifications();
+      return false;
+    });
+  },
   bindEvents: function() {
     var _this = this;
     SC.CustomEvents.listen("sc_remove_notification", function(data) {
       _this.removeNotification(data);
     });
+  },
+  showAllNotifications: function() {
+    for(var i=0, len=this.notifications.length; i<len; i++) {
+      this.notifications[i].show();
+    }
   },
   addNotification: function(message_obj) {
     
@@ -242,14 +274,18 @@ SC.Notification.prototype = {
       _this.in_doc = false;
       return false;
     });
+    this.setCloseTimer();
     
+    return this;
+  },
+  setCloseTimer: function() {
     if(this.message_obj.duration) {
+      var _this = this;
+      clearTimeout(this.display_timer);
       this.display_timer = setTimeout(function() {
         _this.remove();
       }, this.duration);
     }
-    
-    return this;
   },
   update: function(message_obj) {
     this.message.html(message_obj.message);
@@ -268,13 +304,22 @@ SC.Notification.prototype = {
     return this;
   },
   remove: function() {
+    var _this = this;
     clearTimeout(this.display_timer);
     this.el.fadeOut(function() {
+      var _that = _this;
       $(this).css("visibility", "hidden").show().slideUp(function() {
         $(this).remove().attr("style", "");
+        _that.in_doc=false;
       })
     });
     return this;
+  },
+  show: function() {
+    if(!this.in_doc) {
+      this.update(this.message_obj);
+    }
+    this.setCloseTimer();
   }
 }
 
@@ -537,6 +582,7 @@ SC.ReplyCreateForm.prototype = {
   },
   cacheElements: function() {
     this.form = this.el.find("form");
+    this.text = this.form.find("textarea");
     this.submit = this.form.find("input#btn_create");
     return this;
   },
@@ -598,6 +644,7 @@ SC.ReplyCreateForm.prototype = {
     else {
       this.loadEl();
     }
+    this.text.focus();
     return this;
   },
   hide: function() {
@@ -650,7 +697,7 @@ $(function() {
     $(".board").each(function(i, val) { SC.data.boards.push(new SC.Board(val));});
     $(".thread").each(function(i, val) { SC.data.threads.push(new SC.Thread(val));});
     
-    SC.data.notifier = new SC.Notifier(new SC.NotificationCenter("#notifier"));
+    SC.data.notifier = new SC.Notifier(new SC.NotificationCenter("#notifier", true));
     SC.data.updater = new SC.Updater();
   }
 });
