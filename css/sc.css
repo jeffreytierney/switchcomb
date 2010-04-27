@@ -1,3 +1,59 @@
+/* http://meyerweb.com/eric/tools/css/reset/ */
+/* v1.0 | 20080212 */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, font, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	font-size: 100%;
+	vertical-align: baseline;
+	background: transparent;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+
+/* remember to highlight inserts somehow! */
+ins {
+	text-decoration: none;
+}
+del {
+	text-decoration: line-through;
+}
+
+/* tables still need 'cellspacing="0"' in the markup */
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+
 body {
 	margin:0 10px;
 	padding:0;
@@ -27,12 +83,19 @@ h3 {
 	width: 100%;
 	border-bottom:1px solid #dcdcdc;
 	position: relative;
-	margin:0px 0 10px 0;
+	padding:3px 0 3px 0;
+  height: 57px;
+  line-height: 57px;
+  margin-bottom: 10px;
+}
+
+#header_home {
+  float: left;
+  width: 33%;
 }
 
 #login {
 	float:left;
-	
 }
 
 #register {
@@ -60,17 +123,19 @@ h3 {
 	float:left;
 }
 
-#links {
-	position:absolute;
-	top:33px;
-	left:350px;
-	white-space:nowrap;
-	overflow:hidden;
-	z-index:25;
+#header_links {
+	float: left;
+	width: 33%;
+  text-align: center;
 }
 
-#links a {
-	margin:0 10px 0 0;
+#links {
+  margin 0 auto;
+}
+
+#links li {
+	float: left;
+  width: 33%;
 }
 
 #pagecontainer {
@@ -85,10 +150,9 @@ h3 {
 }
 
 #loggedin {
-	position: absolute;
-	top:5px;
-	right: 5px;
-	font-size: 11px;
+	float: right;
+  width: 33%;
+	text-align: right;
 }
 
 #login input {
@@ -113,9 +177,18 @@ h3 {
 	display: none;
 }
 
-div.util_links {
+.util_links {
 	height: 20px;
 	line-height: 20px;
+}
+
+.util_links li {
+  float: left;
+  margin-left: 15px;
+}
+
+.util_links li:first-child {
+  margin-left: 0px;
 }
 
 #boardset {
@@ -181,26 +254,30 @@ div.util_links {
 	height: 20px;
 	line-height: 20px;
 	border-bottom: 1px dotted #DCDCDC;
+  color: #000;
+  text-decoration: none;
+  display: block;
 }
 
 .boarditemlast {
 	border-bottom: 0px;
 }
 
-div.boarditem:hover {
+.boarditem:hover {
 	background-color: #DCDCDC;
 }
 
-div.boarditemmouseover {
+.boarditemmouseover {
 	background-color: #DCDCDC;
 }
 
-.boarditem div {
+.boarditem span {
 	float: left;
 }
 
 .board_threadname {
 	width: 49%;
+  color: #345678;
 }
 
 .board_threadcreatedby {

@@ -645,6 +645,7 @@ SC.ReplyCreateForm.prototype = {
       this.loadEl();
     }
     this.text.focus();
+    this.callHook("sc_replyform_show");
     return this;
   },
   hide: function() {
@@ -689,6 +690,8 @@ SC.ReplyCreateForm.prototype = {
   }
   
 }
+
+SC.util.acceptsHooks(SC.ReplyCreateForm);
 
 $(function() {
   if(SC.data.current_user) {
