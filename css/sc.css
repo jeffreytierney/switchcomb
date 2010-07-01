@@ -385,9 +385,9 @@ div.message div.message_date {
 
 
 /* new stuff to keep on redo */
-.boarditem.new .board_threadname a {
-  padding-right: 50px;
-  background: transparent url(/images/new.png) no-repeat scroll right top;
+.boarditem.new .board_threadname {
+  text-indent: 50px;
+  background: transparent url(/images/new.png) no-repeat scroll left top;
 }
 
 #loadmore {

@@ -24,7 +24,9 @@
       <?php if($message->subject != "" && $message->threadid !=0): ?>
         <div class="changed_subject"><?php echo $message->subject; ?></div>
       <?php endif; ?>
-      <?php echo $message->text; ?>
+      <div class="message_text">
+        <?php echo $message->text; ?>
+      </div>
     </div>
   </div>
 
