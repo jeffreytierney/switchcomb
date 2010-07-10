@@ -1,6 +1,6 @@
-#!/usr/bin/php
+#!/usr/bin/php -q
 <?php
-//$from_email="prod";
+$from_email=true;
 require_once('sc_lib.php');
 
 // read from stdin
@@ -61,10 +61,10 @@ for ($i=0; $i < count($lines); $i++) {
 	$found_end_header = false;
 	$found_message_start = false;
 	$found_message_end = false;
-	
+
 	$first_line = "";
 foreach($tempmessage as $id=>$line) {
-	
+
 	if(trim($line) !== "" && !$found_first_line) {
 		$first_line = $line;
 		$found_first_line = true;
@@ -87,8 +87,8 @@ foreach($tempmessage as $id=>$line) {
 	else {
 		continue;
 	}
-	
-	
+
+
 }
 
 $message = implode("<br/>", $message_array);
@@ -127,14 +127,14 @@ try {
   if($board_id) {
     $board = new SCBoard($board_id);
     $user = new SCUser($from);
-      
+
     $user_id = $user->userid;
     if($user->isMemberOf($board->boardid)) {
       if($thread_id) {
         if($board->hasMessage($thread_id)) {
           $thread = new SCThread($thread_id);
           $thread->addMessage(array(
-            "authorid"=>$user_id, 
+            "authorid"=>$user_id,
             "text"=>$message,
             "source"=>"email")
             );
@@ -144,7 +144,7 @@ try {
         }
       }
       else {
-      
+
         $board->addThread(array(
           "authorid"=>$user_id,
           "subject"=>$subject,
@@ -166,6 +166,6 @@ catch (Exception $ex) {
 }
 
 //mail("jeffrey.tierney@gmail.com", "message processed", $email);
-return true;
+return false;
 ?>
 

@@ -41,11 +41,14 @@ require_once "lib/SCRoutes.php";
 
 require_once "api/SCApi.php";
 
-$user_session = new SCUserSession();
-$current_user = $user_session->getSessionUser();
+$current_user = null;
+if (!isset($from_email)) {
+  $user_session = new SCUserSession();
+  $current_user = $user_session->getSessionUser();
 
-if(!$current_user->existing) {
-  $current_user = null;
+  if(!$current_user->existing) {
+    $current_user = null;
+  }
 }
 
 

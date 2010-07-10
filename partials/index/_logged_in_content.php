@@ -16,6 +16,6 @@
         </div>
       <?php endforeach; ?>
     </div>
-  
+
   <?php endforeach; ?>
 </div>
