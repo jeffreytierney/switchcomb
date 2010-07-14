@@ -53,7 +53,7 @@ class SCAsset extends SCBase {
     $this->md5sum = null;
 
     $this->folder = "i";
-    $this->param_name = "media";
+    $this->param_name = "uploadmedia";
     $this->acceptable_url_prefixes = array("http://", "https://", "ftp://");
   }
 
@@ -142,7 +142,7 @@ class SCAsset extends SCBase {
       "orig-name" => $this->orig_path
     );
     $s3 = new S3(awsAccessKey, awsSecretKey);
-    if ($s3->putObject($this->toArray(), SC_IMAGEBUCKET, $this->path(), S3::ACL_PUBLIC_READ, $meta)) {
+    //if ($s3->putObject($this->toArray(), SC_IMAGEBUCKET, $this->path(), S3::ACL_PUBLIC_READ, $meta)) {
       $db = new SCDB();
 
       $type_array = explode("/", $this->type);
@@ -159,11 +159,8 @@ class SCAsset extends SCBase {
       );
 
       $db->insertFromArray($db_array, "assets");
-      echo $this->url();
-    }
-    else {
-      echo "not saved";
-    }
+      //echo $this->url();
+    //}
   }
 
   public function creator() {

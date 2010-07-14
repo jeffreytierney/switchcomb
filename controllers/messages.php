@@ -4,14 +4,14 @@ class SCMessagesController {
   public function _new() {
     SC::loginRequired();
     global $current_user;
-    
+
     $vars = array(
       "subject"=>SC::getParam("subject", true),
       "message"=>SC::getParam("message", true),
       "boardid"=>$_GET["boardid"],
       "threadid"=>$_GET["threadid"]
     );
-    
+
     switch ($_GET["__content_type"]) {
       case "json":
         $output = array(
@@ -21,21 +21,20 @@ class SCMessagesController {
         break;
       case "html":
       default:
-    
+
         $cs = array(
           "title"=>"Reply",
           "head"=>SCPartial::renderToString("shared/head"),
           "util_links"=>SCPartial::renderToString("message/util_links", $vars),
           "content"=>SCPartial::renderToString("message/new", $vars)
         );
-        
+
         SCLayout::render("main", $vars, $cs);
     }
   }
   public function create() {
     SC::loginRequired();
     global $current_user;
-    
     switch ($_GET["__content_type"]) {
       case "json":
         $api = new SCApi();

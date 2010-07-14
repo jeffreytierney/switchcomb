@@ -119,11 +119,11 @@ SC.Notifier.prototype = {
         }
       }
       //if(!found_board) {
-        
+
         if(data.msg_count === 0) {
           var message = "New Thread ("+data.threadsubject+") Created in ";
           message += (found_board ? "this board" : "Board " + data.boardname);
-          
+
           _this.notification_center.addNotification({
             message: message,
             id: data.boardid + "_"+ data.threadid
@@ -179,7 +179,7 @@ SC.NotificationCenter.prototype = {
     this.badge_el_count = $(document.createElement("span")).attr("id", "notification_badge_count");
     this.badge_el.append(this.badge_el_count);
     this.el.prepend(this.badge_el);
-    
+
     var _this = this;
     SC.CustomEvents.listen("sc_notification_center_update", function(data) {
       _this.badge_el_count.html(data.length);
@@ -190,7 +190,7 @@ SC.NotificationCenter.prototype = {
         _this.badge_el.hide();
       }
     });
-    
+
     this.badge_el.bind("click", function() {
       _this.showAllNotifications();
       return false;
@@ -208,7 +208,7 @@ SC.NotificationCenter.prototype = {
     }
   },
   addNotification: function(message_obj) {
-    
+
     if(message_obj.hasOwnProperty("id") && this.notifications_by_id.hasOwnProperty(message_obj.id)) {
       this.notifications[this.notifications_by_id[message_obj.id]].update(message_obj);
     }
@@ -275,7 +275,7 @@ SC.Notification.prototype = {
       return false;
     });
     this.setCloseTimer();
-    
+
     return this;
   },
   setCloseTimer: function() {
@@ -389,18 +389,18 @@ SC.Board.prototype = {
         _this.loadThreads();
       }
     });
-    
+
     SC.CustomEvents.listen(this.post_callback_event, function(data) {
       if(data && data.transfer) {
         location.href=data.transfer;
       }
     });
-    
+
     this.els.create_thread_link.bind("click", function() {
       _this.create_thread_form.show();
       return false;
     });
-    
+
     return this;
   },
   checkSetNewest: function(threadid) {
@@ -506,16 +506,16 @@ SC.Thread.prototype = {
         _this.showLoadMore(count);
       }
     });
-    
+
     SC.CustomEvents.listen(this.post_callback_event, function() {
       _this.loadmore_link.click();
     });
-    
+
     this.loadmore_link.bind("click", function() {
       _this.loadMessages();
       return false;
     });
-    
+
     this.els.messageListContainer.bind('click', function(e) {
       if($(e.target).hasClass("reply_link")) {
         _this.reply_form.show();
@@ -589,7 +589,8 @@ SC.ReplyCreateForm.prototype = {
   insertElements: function() {
     this.loading = $(document.createElement("span")).addClass("loading").addClass("small").html("Posting...");
     this.cancel = $(document.createElement("input")).attr("type", "button").attr("id", "btn_cancel").val("Cancel");
-    this.form.append(this.loading).append(this.cancel);
+    this.json = $(document.createElement("input")).attr("type", "hidden").attr("name", "__content_type").val("json");
+    this.form.append(this.loading).append(this.cancel).append(this.json);
     return this;
   },
   bindEvents: function() {
@@ -599,10 +600,10 @@ SC.ReplyCreateForm.prototype = {
       _this.cancel.hide();
       _this.loading.show();
       _this.post();
-      _this.form.find("input, textarea").attr("disabled","true");
+      //_this.form.find("input, textarea").attr("disabled","true");
       return false;
     });
-    
+
     this.cancel.bind("click", function() {
       _this.hide();
       return false;
@@ -680,7 +681,7 @@ SC.ReplyCreateForm.prototype = {
       SC.CustomEvents.fire(this.custom_event, data);
     }
     this.hide();
-    
+
     return this;
   },
   postError: function(xhr) {
@@ -688,7 +689,7 @@ SC.ReplyCreateForm.prototype = {
     this.hide();
     return this;
   }
-  
+
 }
 
 SC.util.acceptsHooks(SC.ReplyCreateForm);
@@ -699,7 +700,7 @@ $(function() {
     SC.data.threads = [];
     $(".board").each(function(i, val) { SC.data.boards.push(new SC.Board(val));});
     $(".thread").each(function(i, val) { SC.data.threads.push(new SC.Thread(val));});
-    
+
     SC.data.notifier = new SC.Notifier(new SC.NotificationCenter("#notifier", true));
     SC.data.updater = new SC.Updater();
   }

@@ -97,14 +97,14 @@ class SCMessage extends SCBase {
 			$this->text = $messageinfo["msg_text"] or $this->text = $messageinfo["text"];
 			$this->created = $messageinfo["msg_date"] or $this->created = $messageinfo["created"];
 			$this->authorid = $messageinfo["msg_author"] or $this->authorid = $messageinfo["authorid"];
-			$this->type = $messageinfo["msg_type"] or $this->nsfw = $messageinfo["type"];
+			$this->type = $messageinfo["msg_type"] or $this->type = $messageinfo["type"];
 
       if(!isset(SCMessage::$acceptable_types[$this->type])) {
         $this->type = "text";
       }
 
-      $this->media = $messageinfo["msg_media"] or $this->nsfw = $messageinfo["media"];
-      $this->caption = $messageinfo["msg_media_caption"] or $this->nsfw = $messageinfo["caption"];
+      //$this->media = $messageinfo["msg_media"] or $this->media = $messageinfo["media"];
+      $this->caption = $messageinfo["msg_media_caption"] or $this->caption = $messageinfo["caption"];
 
       if($messageinfo["msg_source"] || $messageinfo["source"]) {
         $this->source = $messageinfo["msg_source"] or $this->source = $messageinfo["source"];
@@ -121,6 +121,30 @@ class SCMessage extends SCBase {
 
       if($messageinfo["author"] && $messageinfo["author"]->existing) {
         $this->authoringuser = $messageinfo["author"];
+      }
+
+
+      if($this->type == "image" && ($messageinfo["url"] || $_FILES)) {
+        $seed = trim($messageinfo["url"]) or $seed = $_FILES;
+        $media = $seed;
+        //$asset = new SCAsset($this->author()->userid, $seed);
+        //$media = $asset->hash;
+      }
+      if($this->type == "video") {
+        $media = $messageinfo["url"];
+      }
+      if($this->type == "link") {
+        $media = $messageinfo["url"];
+      }
+      if($this->type =="text") {
+        $media = null;
+        $this->media_caption = null;
+      }
+
+
+      $this->media = $messageinfo["msg_media"] or $this->media = $media;
+      if(trim($this->media_caption) === "") {
+        $this->media_caption == null;
       }
       /*
       else {
@@ -167,9 +191,14 @@ class SCMessage extends SCBase {
     if(!$this->boardid) {
       throw new MessageException("You need a valid boardid to create a message");
     }
-    if(!$this->text) {
-      throw new MessageException("You need a valid message to create a message");
+    if(!$this->text && !$this->media) {
+      throw new MessageException("You need valid message content to create a message");
     }
+
+    if($this->type == "image") {
+        $asset = new SCAsset($this->author()->userid, $this->media);
+        $this->media = $asset->hash;
+      }
 
 		//$sql = "INSERT INTO messages (msg_date, msg_author, msg_subject, msg_text, msg_board_id" . ($source ? ", msg_source" : "") . ") VALUES('".SC::dbDate()."', $userid, '".SC::dbString($subject) ."', '" .SC::dbString($text) ."', " . $this->boardid  . ($source ? ", '" . SC::dbString($source) . "'" : "") . ")";
 		$db = new SCDB();
@@ -184,7 +213,14 @@ class SCMessage extends SCBase {
       "msg_thread"=>$this->threadid,
       "msg_board_id"=>$this->boardid,
       "msg_source"=>SC::dbString($this->source, true),
+      "msg_type"=>SC::dbString($this->type, true),
     );
+    if($this->media) {
+      $insert_array["msg_media"] = SC::dbString($this->media, true);
+    }
+    if($this->media_caption) {
+      $insert_array["msg_media_caption"] = SC::dbString($this->caption, true);
+    }
 
     $db->insertFromArray($insert_array, "messages");
 

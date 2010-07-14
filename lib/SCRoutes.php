@@ -1,7 +1,7 @@
 <?php
 
 class SCRoutes {
-  
+
   static $routeTable = array(
     "index"=>array(
       "index"=>array(
@@ -125,7 +125,7 @@ class SCRoutes {
     )
 
   );
-  
+
   static function checkRequestMethod($method, $required_methods) {
     if(in_array(strtolower($method), explode(",", strtolower($required_methods)))) {
       return true;
@@ -143,7 +143,7 @@ class SCRoutes {
     $uri = $_SERVER["REQUEST_URI"];
     $method = $_SERVER['REQUEST_METHOD'];
     //echo $uri;
-    
+
     foreach(SCRoutes::$routeTable as $controller=>$actions) {
       foreach($actions as $action=>$params) {
         if(isset($params["route"]) && isset($params["method"])) {
@@ -156,7 +156,7 @@ class SCRoutes {
               $route = SCRoutes::routeToRegex($params["route"]);
             }
             $match_count = preg_match($route, $uri, $matches);
-  
+
             if($match_count) {
               $params = array();
               foreach($matches as $match_name=>$match_value) {
@@ -167,7 +167,7 @@ class SCRoutes {
                   $params[$match_name] = $match_value;
                 }
               }
-              
+
               $params["controller"] = $controller;
               $params["action"] = $action;
               return $params;
@@ -176,9 +176,9 @@ class SCRoutes {
         }
       }
     }
-    
+
   }
-  
+
   static function routeToRegex($route) {
     $url_parts = explode("/", $route);
     for ($i=0;$i<sizeof($url_parts);$i++) {
@@ -186,17 +186,17 @@ class SCRoutes {
         $url_parts[$i] = "(?P<".ltrim($url_parts[$i],":").">[^\/\?\#]*)";
       }
     }
-    
+
     $regex =  "/".implode("\/", $url_parts)."([\?\#].*)*$/";
     return $regex;
   }
-  
+
   static function set($controller, $action, $params=false) {
     if(!$params) $params = array();
     if(isset(SCRoutes::$routeTable[$controller]) && isset(SCRoutes::$routeTable[$controller][$action]) && isset(SCRoutes::$routeTable[$controller][$action]["route"])) {
       $route = SCRoutes::$routeTable[$controller][$action]["route"];
       $route_parts = explode("/", $route);
-      
+
       for ($i=0;$i<sizeof($route_parts);$i++) {
         if(strpos($route_parts[$i], ":") === 0) {
           $key = ltrim($route_parts[$i],":");
@@ -204,7 +204,7 @@ class SCRoutes {
           unset($params[$key]);
         }
       }
-      
+
       $url = implode("/", $route_parts);
       if(sizeof($params)) {
         $url .= "?".http_build_query($params);
