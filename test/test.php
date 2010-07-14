@@ -2,9 +2,21 @@
 
 require_once "../sc_lib.php";
 
-echo SCRoutes::set("users", "memberships_index", array("userid"=>1,"something"=>"else","another"=>"hooha"));
+  if($_FILES) {
+    $img = new SCAsset($current_user->userid);
+  }
+  else {
+    $img = new SCAsset($current_user->userid, "http://pics.jeffreytierney.com/jaymeme/old_timer_jay.jpg");
+  }
+
+
+
+
 
 /*
+echo SCRoutes::set("users", "memberships_index", array("userid"=>1,"something"=>"else","another"=>"hooha"));
+
+
 $route = SCRoutes::routeToRegex("/boards/:boardid/thread/:threadid");
 
 $match_count = preg_match($route, "/boards/3241/thread/3409", $matches);
@@ -16,7 +28,7 @@ if($match_count) {
       $params[$match_name] = $match_value;
     }
   }
-  
+
   echo var_dump($params);
 }
 else  {echo "nope";}
@@ -85,11 +97,11 @@ $result = $db->queryArray($sql);
 if(sizeof($result)) {
   foreach($result as $id=>$user) {
     $sql2 = "UPDATE users set user_password='". md5("SCpre_salt".$user["user_password"]."SCpost_salt") ."' WHERE user_id=".$user["user_id"];
-    
+
     echo ($sql2 . "<br/>");
-    
+
     $db2 = new SCDB();
-    
+
     $db2->query($sql2);
   }
 }

@@ -1,11 +1,13 @@
 <?php
 
   require_once "define_environment.php";
-  
+  require_once "awskeys.php";
+
   switch(SC_ENVIRONMENT) {
-  
+
     case "development":
       define("SC_ROOT", "/");
+      define("SC_IMAGEBUCKET", "ilocal.switchcomb.com");
       define("SC_DBSERVER", "127.0.0.1");
       define("SC_DBSCHEMA", "sc_mb");
       define("SC_DBUSER", "sc_mb");
@@ -17,9 +19,10 @@
       define("SCINCLUDEPATH", "/webroot/switchcomb");
       define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@t.switchcomb.com");
       break;
-   
+
     case "mobiledevelopment":
       define("SC_ROOT", "/");
+      define("SC_IMAGEBUCKET", "ilocal.switchcomb.com");
       define("SC_DBSERVER", "127.0.0.1");
       define("SC_DBSCHEMA", "sc_mb");
       define("SC_DBUSER", "sc_mb");
@@ -34,6 +37,7 @@
 
     case "test":
       define("SC_ROOT", "/");
+      define("SC_IMAGEBUCKET", "itest.switchcomb.com");
       define("SC_DBSERVER", "localhost");
       define("SC_DBSCHEMA", "jeffr28_scmbtest");
       define("SC_DBUSER", "jeffr28_scmbtest");
@@ -48,6 +52,7 @@
 
     case "mobiletest":
       define("SC_ROOT", "/");
+      define("SC_IMAGEBUCKET", "itest.switchcomb.com");
       define("SC_DBSERVER", "localhost");
       define("SC_DBSCHEMA", "jeffr28_scmbtest");
       define("SC_DBUSER", "jeffr28_scmbtest");
@@ -62,6 +67,7 @@
 
     case "production":
       define("SC_ROOT", "/");
+      define("SC_IMAGEBUCKET", "i.switchcomb.com");
       define("SC_DBSERVER", "localhost");
       define("SC_DBSCHEMA", "jeffr28_scmb");
       define("SC_DBUSER", "jeffr28_scmb");
@@ -76,6 +82,7 @@
 
     case "mobileproduction":
       define("SC_ROOT", "/");
+      define("SC_IMAGEBUCKET", "i.switchcomb.com");
       define("SC_DBSERVER", "localhost");
       define("SC_DBSCHEMA", "jeffr28_scmb");
       define("SC_DBUSER", "jeffr28_scmb");
@@ -88,8 +95,8 @@
       define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@boards.switchcomb.com");
       break;
   }
-  
-  
+
+
   $inc_path = array_merge(array(get_include_path()),explode(";",SCINCLUDEPATH));
   set_include_path(implode(PATH_SEPARATOR,$inc_path));
 

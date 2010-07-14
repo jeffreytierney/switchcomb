@@ -11,10 +11,20 @@ class SCMessage extends SCBase {
 	public $authorid;
 	public $nsfw;
   public $source;
+  public $type;
+  public $media;
+  public $caption;
 
   private $authoringuser;
 
-  
+  static $acceptable_types = array(
+    "text"=>1,
+    "image"=>2,
+    "video"=>3,
+    "link"=>4,
+  );
+
+
   function __construct($seed=false) {
     if($seed) {
       if(is_numeric($seed)) {
@@ -30,11 +40,11 @@ class SCMessage extends SCBase {
       }
     }
   }
-    
+
   function __destruct() {
     $this->setNull();
   }
-  
+
   protected function setNull() {
     $this->existing = null;
 		$this->messageid = null;
@@ -47,8 +57,11 @@ class SCMessage extends SCBase {
 		$this->authoringuser = null;
 		$this->nsfw = null;
     $this->source = SC_MSGSOURCE;
+    $this->type = "text";
+		$this->media = null;
+		$this->caption = null;
   }
-  
+
   private function loadInfo($messageid, $count=false) {
     //$sql = "SELECT * FROM messages m WHERE m.msg_id=$messageid";
     $db = new SCDB();
@@ -58,7 +71,7 @@ class SCMessage extends SCBase {
       array("messages m"),
       array("m.msg_id"=>$messageid)
     );
-    
+
 		if(sizeof($messageinfo)) {
       $this->fromArray($messageinfo);
     }
@@ -66,7 +79,7 @@ class SCMessage extends SCBase {
       throw new MessageException("Message not found", 404);
     }
   }
-  
+
   protected function fromArray($arr) {
     $this->setNull();
     if(sizeof($arr)) {
@@ -76,7 +89,7 @@ class SCMessage extends SCBase {
       else {
         $messageinfo = $arr;
       }
-      
+
 			$this->messageid = $messageinfo["msg_id"] or $this->messageid = $messageinfo["messageid"];
 			$this->threadid = $messageinfo["msg_thread"] or $this->threadid = $messageinfo["threadid"];
 			$this->boardid = $messageinfo["msg_board_id"] or $this->boardid = $messageinfo["boardid"];
@@ -84,21 +97,28 @@ class SCMessage extends SCBase {
 			$this->text = $messageinfo["msg_text"] or $this->text = $messageinfo["text"];
 			$this->created = $messageinfo["msg_date"] or $this->created = $messageinfo["created"];
 			$this->authorid = $messageinfo["msg_author"] or $this->authorid = $messageinfo["authorid"];
-			$this->nsfw = $messageinfo["msg_nsfw"] or $this->nsfw = $messageinfo["nsfw"];
-      
+			$this->type = $messageinfo["msg_type"] or $this->nsfw = $messageinfo["type"];
+
+      if(!isset(SCMessage::$acceptable_types[$this->type])) {
+        $this->type = "text";
+      }
+
+      $this->media = $messageinfo["msg_media"] or $this->nsfw = $messageinfo["media"];
+      $this->caption = $messageinfo["msg_media_caption"] or $this->nsfw = $messageinfo["caption"];
+
       if($messageinfo["msg_source"] || $messageinfo["source"]) {
         $this->source = $messageinfo["msg_source"] or $this->source = $messageinfo["source"];
       }
-      
+
       if($this->messageid) {
         $this->existing = true;
       }
-      
+
       if(isset($messageinfo["authoringuser"])) {
         $this->authoringuser = $messageinfo["authoringuser"];
       }
 
-      
+
       if($messageinfo["author"] && $messageinfo["author"]->existing) {
         $this->authoringuser = $messageinfo["author"];
       }
@@ -114,11 +134,11 @@ class SCMessage extends SCBase {
         }
       }
       */
-      
+
     }
-    
+
     return $this;
-      
+
   }
   public function author() {
     if($this->authoringuser) {
@@ -128,10 +148,10 @@ class SCMessage extends SCBase {
       $this->authoringuser = new SCUser($this->authorid);
       return $this->authoringuser;
     }
-    
+
     return false;
   }
-  
+
   public function create() {
     /*
     if((!$this->author || !$this->author->existing) && $this->authorid) {
@@ -150,12 +170,12 @@ class SCMessage extends SCBase {
     if(!$this->text) {
       throw new MessageException("You need a valid message to create a message");
     }
-    
+
 		//$sql = "INSERT INTO messages (msg_date, msg_author, msg_subject, msg_text, msg_board_id" . ($source ? ", msg_source" : "") . ") VALUES('".SC::dbDate()."', $userid, '".SC::dbString($subject) ."', '" .SC::dbString($text) ."', " . $this->boardid  . ($source ? ", '" . SC::dbString($source) . "'" : "") . ")";
 		$db = new SCDB();
 		//$db->query($sql);
-    
-    
+
+
     $insert_array = array(
       "msg_date"=>SC::dbDate(),
       "msg_author"=>SC::dbString($this->author()->userid, true),
@@ -165,47 +185,34 @@ class SCMessage extends SCBase {
       "msg_board_id"=>$this->boardid,
       "msg_source"=>SC::dbString($this->source, true),
     );
-    
+
     $db->insertFromArray($insert_array, "messages");
-    
+
 		$newmessage = mysql_insert_id($db->conn);
 		if($newmessage) {
-      /*
-			if(!SC::isLocal()) {
-				$user = SCUser::newFromId($userid);
-				$Name = "Switchcomb"; //senders name
-				$email = $this->boardid."@boards.switchcomb.com"; //senders e-mail adress
-				$recipient = ""; //recipient
-				$mail_body = "Posted By: " . $user->displayname . "\n\n" .str_replace("<br/>", "\n", $text); //mail body
-				$subject = "[" . $newthread . "] $subject"; //subject
-				$header = "From: ". $Name . " <" . $email . ">\r\nBcc:" . SC::emailList() ."\r\n"; //optional headerfields
-				
-				mail($recipient, $subject, $mail_body, $header); //mail command :)
-			}
-      */
       $message = new SCMessage($newmessage);
       $this->fromArray($message->toArray());
-      
+
       try{
         $messageMail = SCEmail::newMessageEmail($message);
         $messageMail->sendEmail();
       }
       catch (Exception $ex) {
       }
-      
+
 			return $this;
 		}
 		else {
       throw new MessageException(mysql_error($db->conn));
     }
   }
-  
+
   public function toArray($for_db=false) {
     if(!$for_db) {
       $props = parent::toArray();
       $props["author"] = $this->author();
     }
-    
+
     return $props;
   }
 
