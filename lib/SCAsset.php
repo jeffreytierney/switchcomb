@@ -17,26 +17,27 @@ class SCAsset extends SCBase {
   private $creatinguser;
   private $acceptable_url_prefixes;
 
-  function __construct($user_id, $seed=null) {
+  function __construct($user_id=null, $seed=null) {
     $this->setNull();
-    $this->creatorid = $user_id;
-    if(!$this->creator()->existing) {
-      throw new AssetException("You must be logged in to upload an asset", 403);
-    }
     if($seed) {
+      $this->creatorid = $user_id;
+      if(!$this->creator()->existing) {
+        throw new AssetException("You must be logged in to upload an asset", 403);
+      }
       if(is_array($seed)) {
         $this->newFromUpload();
       }
       else {
         $this->newFromUrl($seed);
       }
+      $this->saveAsset();
     }
     else {
-      $this->newFromUpload();
+      $this->setNull();
     }
 
     //var_dump($this->toArray());
-    $this->saveAsset();
+
   }
 
   function __destruct() {
@@ -51,7 +52,6 @@ class SCAsset extends SCBase {
     $this->size = null;
     $this->data = null;
     $this->md5sum = null;
-
     $this->folder = "i";
     $this->param_name = "uploadmedia";
     $this->acceptable_url_prefixes = array("http://", "https://", "ftp://");
@@ -131,7 +131,7 @@ class SCAsset extends SCBase {
     return implode("/", $parts);
   }
 
-  private function url() {
+  public function url() {
     $parts = array($this->folder, $this->hash);
     $dev = (SC_ENVIRONMENT == "development") ? "s3.amazonaws.com/" : "";
     return "http://".$dev.SC_IMAGEBUCKET."/".implode("/", $parts);
@@ -142,7 +142,7 @@ class SCAsset extends SCBase {
       "orig-name" => $this->orig_path
     );
     $s3 = new S3(awsAccessKey, awsSecretKey);
-    //if ($s3->putObject($this->toArray(), SC_IMAGEBUCKET, $this->path(), S3::ACL_PUBLIC_READ, $meta)) {
+    if ($s3->putObject($this->toArray(), SC_IMAGEBUCKET, $this->path(), S3::ACL_PUBLIC_READ, $meta)) {
       $db = new SCDB();
 
       $type_array = explode("/", $this->type);
@@ -160,7 +160,13 @@ class SCAsset extends SCBase {
 
       $db->insertFromArray($db_array, "assets");
       //echo $this->url();
-    //}
+    }
+  }
+
+  static function assetUrl($hash) {
+    $asset = new SCAsset();
+    $asset->hash = $hash;
+    return $asset->url();
   }
 
   public function creator() {

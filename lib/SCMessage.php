@@ -138,13 +138,13 @@ class SCMessage extends SCBase {
       }
       if($this->type =="text") {
         $media = null;
-        $this->media_caption = null;
+        $this->caption = null;
       }
 
 
       $this->media = $messageinfo["msg_media"] or $this->media = $media;
-      if(trim($this->media_caption) === "") {
-        $this->media_caption == null;
+      if(trim($this->caption) === "") {
+        $this->caption == null;
       }
       /*
       else {
@@ -218,7 +218,7 @@ class SCMessage extends SCBase {
     if($this->media) {
       $insert_array["msg_media"] = SC::dbString($this->media, true);
     }
-    if($this->media_caption) {
+    if($this->caption) {
       $insert_array["msg_media_caption"] = SC::dbString($this->caption, true);
     }
 

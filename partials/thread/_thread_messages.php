@@ -1,7 +1,7 @@
 <?php $msgs = $messages or $msgs = $thread->messages(); foreach($msgs as $id=>$message): ?>
-				
+
   <div id="message_<?php echo $message->messageid; ?>" class="message">
-    
+
     <div class="message_options">
       <ul class="message_options_content">
         <li>
@@ -25,7 +25,7 @@
         <div class="changed_subject"><?php echo $message->subject; ?></div>
       <?php endif; ?>
       <div class="message_text">
-        <?php echo $message->text; ?>
+        <?php SCPartial::render("message/".$message->type."_body", array("message"=>$message)); ?>
       </div>
     </div>
   </div>
