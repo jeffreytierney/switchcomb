@@ -1,5 +1,4 @@
 <form id="createmessage" method="POST" action="<?php echo SCRoutes::set("messages", "create", array("boardid"=>$boardid,"threadid"=>$threadid)); ?>" enctype="multipart/form-data">
-  <input type="hidden" name="method" value="PUT" />
   <p>
     <label for="message_create_subject">Subject:</label>
     <input type="text" id="message_create_subject" name="subject" value="<?php echo $subject; ?>" />
@@ -30,6 +29,7 @@
     <input id="message_create_upload_image" type="file" name="uploadmedia" />
   </p>
   <p>
+    <input type="hidden" name="method" value="PUT" />
     <input type="submit" id="btn_create" value="Create" />
   </p>
 </form>

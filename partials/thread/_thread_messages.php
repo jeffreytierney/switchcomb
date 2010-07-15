@@ -25,7 +25,7 @@
         <div class="changed_subject"><?php echo $message->subject; ?></div>
       <?php endif; ?>
       <div class="message_text">
-        <?php SCPartial::render("message/".$message->type."_body", array("message"=>$message)); ?>
+        <?php SCPartial::render("message/".$message->type."_body", array("message"=>$message, "linebreak"=>"<br/>")); ?>
       </div>
     </div>
   </div>

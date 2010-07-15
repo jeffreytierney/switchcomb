@@ -124,8 +124,8 @@ class SCMessage extends SCBase {
       }
 
 
-      if($this->type == "image" && ($messageinfo["url"] || $_FILES)) {
-        $seed = trim($messageinfo["url"]) or $seed = $_FILES;
+      if($this->type == "image" && ($messageinfo["attachment"] || $messageinfo["url"] || $_FILES)) {
+        $seed = $messageinfo["attachment"] or $seed = trim($messageinfo["url"]) or $seed = $_FILES;
         $media = $seed;
         //$asset = new SCAsset($this->author()->userid, $seed);
         //$media = $asset->hash;

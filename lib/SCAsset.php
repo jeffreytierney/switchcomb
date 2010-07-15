@@ -25,7 +25,7 @@ class SCAsset extends SCBase {
         throw new AssetException("You must be logged in to upload an asset", 403);
       }
       if(is_array($seed)) {
-        $this->newFromUpload();
+        $this->newFromUpload($seed);
       }
       else {
         $this->newFromUrl($seed);
@@ -67,7 +67,12 @@ class SCAsset extends SCBase {
       $this->size = $file_info["size"];
       $this->create_time = time();
       $this->hash = md5($this->orig_path + $this->create_time);
-      $this->data = file_get_contents($file_info["tmp_name"]);
+      if(isset($file_info["body"])) {
+        $this->data = $file_info["body"];
+      }
+      else {
+        $this->data = file_get_contents($file_info["tmp_name"]);
+      }
       $this->md5sum = base64_encode(md5($this->data, true));
     }
 

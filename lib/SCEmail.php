@@ -28,7 +28,8 @@ class SCEmail {
     $mail->author = $message->author();
     $thread = $message->threadid ? new SCThread($message->threadid) : $message;
 
-    $mail->body = "Posted By: " . $mail->author->displayname . "\n\n" .str_replace("<br/>", "\n", $message->text); //mail body
+    //$mail->body = "Posted By: " . $mail->author->displayname . "\n\n" .str_replace("<br/>", "\n", $message->text); //mail body
+    $mail->body = "Posted By: " . $mail->author->displayname . "\n\n" .SCPartial::renderToString("message/".$message->type."_body", array("message"=>$message, "linebreak"=>"\n"));
     $mail->subject = "[" . $thread->messageid . "] " . $thread->subject; //subject
 
     $mail->headers = "From: " . $mail->from . "\r\n".

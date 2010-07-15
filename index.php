@@ -14,8 +14,6 @@
     $route_parts = SCRoutes::parseUrl();
 
     if(!$route_parts) {
-      var_dump($_POST);
-      var_dump($_FILES);
       throw new Exception("This page does not exist - " . $_SERVER["REQUEST_URI"], 404);
     }
 

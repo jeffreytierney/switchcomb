@@ -32,6 +32,7 @@ require_once "lib/SCBoardSet.php";
 require_once "lib/SCMembershipSet.php";
 require_once "lib/SCMembership.php";
 require_once "lib/SCEmail.php";
+require_once "lib/SCEmailParser.php";
 require_once "lib/SCAsset.php";
 require_once "lib/SCViewed.php";
 require_once "lib/SCPartial.php";

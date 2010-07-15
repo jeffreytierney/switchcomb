@@ -2,109 +2,65 @@
 
 require_once "../sc_lib.php";
 
-  if($_FILES) {
-    $img = new SCAsset($current_user->userid);
-  }
-  else {
-    $img = new SCAsset($current_user->userid, "http://pics.jeffreytierney.com/jaymeme/old_timer_jay.jpg");
-  }
+
+// read from stdin
+$fd = fopen("emails/iphone_attach.txt", "r");
+$email = "";
+while (!feof($fd)) {
+    $email .= fread($fd, 1024);
+}
+fclose($fd);
+
+$sc_email = new SCEmailParser($email);
+
+//var_dump($sc_email->attachment);
 
 
+try {
+  if($sc_email->boardid) {
+    $board = new SCBoard($sc_email->boardid);
+    $user = new SCUser($sc_email->from_address);
 
+    $user_id = $user->userid;
+    if($user->isMemberOf($board->boardid)) {
+      $message_array = array(
+        "authorid"=>$user_id,
+        "text"=>$sc_email->body,
+        "source"=>"email"
+      );
 
-
-/*
-echo SCRoutes::set("users", "memberships_index", array("userid"=>1,"something"=>"else","another"=>"hooha"));
-
-
-$route = SCRoutes::routeToRegex("/boards/:boardid/thread/:threadid");
-
-$match_count = preg_match($route, "/boards/3241/thread/3409", $matches);
-
-if($match_count) {
-  $params = array();
-  foreach($matches as $match_name=>$match_value) {
-    if(is_string($match_name)) {
-      $params[$match_name] = $match_value;
+      if ($sc_email->attachment) {
+        $message_array["type"] = "image";
+        $message_array["attachment"] = array("uploadmedia"=>$sc_email->attachment);
+      }
+      if($sc_email->threadid) {
+        if($board->hasMessage($sc_email->threadid)) {
+          $thread = new SCThread($sc_email->threadid);
+          $thread->addMessage($message_array);
+        }
+        else {
+          throw new Exception("thread " . $sc_email->threadid . " not in board " . $sc_email->boardid);
+        }
+      }
+      else {
+        $message_array["subject"] = $sc_email->subject;
+        $board->addThread($message_array);
+      }
+    }
+    else {
+     throw new Exception("you dont belong to board " .$sc_email->boardid);
     }
   }
-
-  echo var_dump($params);
-}
-else  {echo "nope";}
-*/
-/*
-echo getcwd();
-
-if($current_user) {
-  //echo $current_user->jsonify();
-}
-else {
-  //echo $user_session->create("jeff", "jtswitchcomb")->jsonify();
-  //echo "false";
-}
-
-$board = new SCBoard(1);
-$view_counts = $current_user->getThreadViews($board->getThreadIds());
-
-$partial = SCPartial::renderToString("board/board", array("board"=>$board,"view_counts"=>$view_counts));
-echo $partial;
-*/
-/*
-$views = $current_user->getThreadViews(7851);
-echo $views->jsonify();
-
-$views = $current_user->setThreadViews(7851, 1111);
-
-echo $views->jsonify();
-*/
-/*
-$thread = new SCThread(7851);
-$thread->getMessages(false, 7857);
-$thread->getMessageCount();
-echo $thread->jsonify();
-//$message = $thread->addMessage(array("authoringuser"=>$current_user,"text"=>"Test"));
-*/
-
-/*
-echo "<br/>";
-$board = new SCBoard(1);
-$board->sendInvites("me@jeffreytierney.com");
-*/
-//echo $board->jsonify();
-
-/*
-$board = new SCBoard(1);
-//$memberships = new SCMembershipSet(false, 1);
-$memberships = $board->memberships(1);
-
-echo $memberships->jsonify();
-
-$email_list = array();
-foreach($memberships->memberships as $id=>$membership) {
-  $email_list[] = $membership->user->email;
-};
-
-echo "<br/>" . implode(", ", $email_list);
-*/
-/*
-$db = new SCDB();
-
-$sql = "SELECT * FROM users WHERE length(user_password) < 30";
-
-$result = $db->queryArray($sql);
-
-if(sizeof($result)) {
-  foreach($result as $id=>$user) {
-    $sql2 = "UPDATE users set user_password='". md5("SCpre_salt".$user["user_password"]."SCpost_salt") ."' WHERE user_id=".$user["user_id"];
-
-    echo ($sql2 . "<br/>");
-
-    $db2 = new SCDB();
-
-    $db2->query($sql2);
+  else {
+    throw new Exception("no board id was passed");
   }
 }
-*/
+catch (Exception $ex) {
+ echo($ex->getMessage());
+}
+
+//mail("jeffrey.tierney@gmail.com", "message processed", $email);
+return false;
+
 ?>
 

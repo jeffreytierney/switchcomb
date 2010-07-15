@@ -3,10 +3,10 @@
 class SCThread extends SCMessage {
   public $message_count;
   public $hidemessages;
-  
+
 	private $messageset;
   // public function messages()
-	
+
 	function __construct($seed=false, $count=false) {
 		if($seed) {
       if(is_numeric($seed)) {
@@ -25,19 +25,19 @@ class SCThread extends SCMessage {
       $this->setNull();
     }
 	}
-  
+
   function __destruct() {
     $this->setNull();
   }
-	
+
 	protected function setNull() {
 		parent::setNull();
     $this->message_count = 0;
 		//$this->messageset = array();
     $this->messageset = null;
 	}
-  
-	
+
+
 	private function loadInfo($threadid, $count=false) {
 		$limitclause = "";
 		if($count) $limitclause = " LIMIT 0, $count";
@@ -49,7 +49,7 @@ class SCThread extends SCMessage {
       array("messages m"),
       array("m.msg_id"=>$threadid, "m.msg_thread"=>0)
     );
-    
+
 		if(sizeof($threadinfo)) {
       $this->fromArray($threadinfo);
 		}
@@ -57,7 +57,7 @@ class SCThread extends SCMessage {
       throw new ThreadException("Thread not found", 404);
     }
 	}
-  
+
   public function messages() {
     if(!$this->hidemessages) {
       if($this->messageset !== null && is_array($this->messageset)) {
@@ -71,7 +71,7 @@ class SCThread extends SCMessage {
       return array();
     }
   }
-  
+
   public function getMessages($count=false, $since=false) {
     $limitclause = "";
 		if($count) $limitclause = " LIMIT 0, $count";
@@ -87,9 +87,9 @@ class SCThread extends SCMessage {
     }
     return $this;
   }
-  
+
   public function getMessageCount() {
-    
+
     $db = new SCDB();
 		$threadinfo = $db->q(
       array("count(msg_id) as msg_count"),
@@ -100,10 +100,10 @@ class SCThread extends SCMessage {
       $count = intval($threadinfo[0]["msg_count"]);
     }
     $this->message_count = $count;
-    
+
     return $this;
   }
-  
+
   protected function fromArray($arr) {
     parent::fromArray($arr);
     $this->message_count = 0;
@@ -118,11 +118,11 @@ class SCThread extends SCMessage {
         $this->hidemessages = $threadinfo["hidemessages"];
       }
     }
-    
+
     return $this;
-      
+
   }
-  
+
   public function create() { //$userid, $subject, $text, $source=false) {
     if(!$this->author() || !$this->author()->userid) {
       throw new ThreadException("You need a valid userid to create a thread");
@@ -133,17 +133,22 @@ class SCThread extends SCMessage {
     if(!$this->subject) {
       throw new ThreadException("You need a subject to create a thread");
     }
-    if(!$this->text) {
+    if(!$this->text&& !$this->media) {
       throw new ThreadException("You need a valid message to create a thread");
     }
     if(!$this->author()->isMemberOf($this->boardid)) {
       throw new ThreadException("You may only create threads for boards you belong to", 401);
     }
+
+    if($this->type == "image") {
+        $asset = new SCAsset($this->author()->userid, $this->media);
+        $this->media = $asset->hash;
+      }
 		//$sql = "INSERT INTO messages (msg_date, msg_author, msg_subject, msg_text, msg_board_id" . ($source ? ", msg_source" : "") . ") VALUES('".SC::dbDate()."', $userid, '".SC::dbString($subject) ."', '" .SC::dbString($text) ."', " . $this->boardid  . ($source ? ", '" . SC::dbString($source) . "'" : "") . ")";
 		$db = new SCDB();
 		//$db->query($sql);
-    
-    
+
+
     $insert_array = array(
       "msg_date"=>SC::dbDate(),
       "msg_author"=>SC::dbString($this->author()->userid, true),
@@ -151,10 +156,18 @@ class SCThread extends SCMessage {
       "msg_text"=>SC::dbString($this->text, true),
       "msg_board_id"=>$this->boardid,
       "msg_source"=>SC::dbString($this->source, true),
+      "msg_type"=>SC::dbString($this->type, true),
     );
-    
+
+    if($this->media) {
+      $insert_array["msg_media"] = SC::dbString($this->media, true);
+    }
+    if($this->caption) {
+      $insert_array["msg_media_caption"] = SC::dbString($this->caption, true);
+    }
+
     $db->insertFromArray($insert_array, "messages");
-    
+
 		$newthread = mysql_insert_id($db->conn);
 		if($newthread) {
       /*
@@ -166,40 +179,40 @@ class SCThread extends SCMessage {
 				$mail_body = "Posted By: " . $user->displayname . "\n\n" .str_replace("<br/>", "\n", $text); //mail body
 				$subject = "[" . $newthread . "] $subject"; //subject
 				$header = "From: ". $Name . " <" . $email . ">\r\nBcc:" . SC::emailList() ."\r\n"; //optional headerfields
-				
+
 				mail($recipient, $subject, $mail_body, $header); //mail command :)
 			}
       */
       $thread = new SCThread($newthread);
       $this->fromArray($thread->toArray());
-      
+
       try{
         $messageMail = SCEmail::newMessageEmail($thread);
         $messageMail->sendEmail();
       }
       catch (Exception $ex) {
       }
-      
+
 			return $this;
 		}
 		else {
       throw new ThreadException(mysql_error($db->conn));
     }
 	}
-	
+
 	public function addMessage($message_init) {
     //$message_init["threadid"] = $this->messageid;
     //$message_init["boardid"] = $this->boardid;
     $message = new SCMessage($message_init);
     $message->threadid = $this->messageid;
     $message->boardid = $this->boardid;
-    
+
     //echo $message->jsonify();
-    
+
     return $message->create();
-    
+
 	}
-	
+
 	public function hasMessage($messageid) {
 		if($messageid=$this->messageid) return true;
 		//$sql = "SELECT * from messages WHERE msg_id=$messageid AND msg_thread=".$this->messageid;

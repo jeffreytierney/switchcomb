@@ -6,6 +6,6 @@
 <?php endif; ?>
 </a>
 <?php if ($message->text): ?>
-  <br/></br/>
-  <?php echo $message->text; ?>
+  <?php echo $linebreak.$linebreak; ?>
+  <?php echo str_replace("\n", $linebreak, $message->text); ?>
 <?php endif; ?>
