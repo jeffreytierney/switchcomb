@@ -22,19 +22,20 @@ class SCEmail {
     $mail = new SCEmail();
     $mail->bcc = $mail->loadMessageEmailRecipients($message);
 
-    $mail->from = SC_MESSAGE_EMAIL_FROM . "<" . str_replace(":boardid", $message->boardid, SC_MESSAGE_EMAIL_FROM_ADDRESS) . ">";
+    //$mail->from = SC_MESSAGE_EMAIL_FROM . "<" . str_replace(":boardid", $message->boardid, SC_MESSAGE_EMAIL_FROM_ADDRESS) . ">";
     $mail->to = "";
 
     $mail->author = $message->author();
     $thread = $message->threadid ? new SCThread($message->threadid) : $message;
+    $mail->from = SC_MESSAGE_EMAIL_FROM . "<" . $thread->emailAddress(). ">";
 
     //$mail->body = "Posted By: " . $mail->author->displayname . "\n\n" .str_replace("<br/>", "\n", $message->text); //mail body
     $mail->body = "Posted By: " . $mail->author->displayname . "\n\n" .SCPartial::renderToString("message/".$message->type."_body", array("message"=>$message, "linebreak"=>"\n"));
-    $mail->subject = "[" . $thread->messageid . "] " . $thread->subject; //subject
+    $mail->subject = $thread->subject; //subject
 
     $mail->headers = "From: " . $mail->from . "\r\n".
                      "Bcc: " . $mail->bcc . "\r\n".
-                     "Reply-To: " . str_replace(":boardid", $message->boardid, SC_MESSAGE_EMAIL_FROM_ADDRESS) . "\r\n" .
+                     "Reply-To: " . $thread->emailAddress() . "\r\n" .
                      "X-Mailer: PHP/" . phpversion();
 
 

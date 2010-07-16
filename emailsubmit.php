@@ -57,7 +57,7 @@ catch (Exception $ex) {
   mail($sc_email->from_address, $ex->getMessage(), $ex->getMessage());
 }
 
-mail("jeffrey.tierney@gmail.com", "message processed", $email);
+//mail("jeffrey.tierney@gmail.com", "message processed", $email);
 return false;
 ?>
 

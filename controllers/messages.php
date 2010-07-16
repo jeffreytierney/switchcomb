@@ -9,7 +9,8 @@ class SCMessagesController {
       "subject"=>SC::getParam("subject", true),
       "message"=>SC::getParam("message", true),
       "boardid"=>$_GET["boardid"],
-      "threadid"=>$_GET["threadid"]
+      "threadid"=>$_GET["threadid"],
+      "thread"=>new SCThread($_GET["threadid"])
     );
 
     switch ($_GET["__content_type"]) {

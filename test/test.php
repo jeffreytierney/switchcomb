@@ -13,9 +13,9 @@ fclose($fd);
 
 $sc_email = new SCEmailParser($email);
 
-//var_dump($sc_email->attachment);
+var_dump($sc_email);
 
-
+/*
 try {
   if($sc_email->boardid) {
     $board = new SCBoard($sc_email->boardid);
@@ -58,6 +58,7 @@ try {
 catch (Exception $ex) {
  echo($ex->getMessage());
 }
+*/
 
 //mail("jeffrey.tierney@gmail.com", "message processed", $email);
 return false;

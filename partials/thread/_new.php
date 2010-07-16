@@ -27,6 +27,7 @@
   <p>
     <label for="thread_create_upload_image">Upload Image:</label>
     <input id="thread_create_upload_image" type="file" name="uploadmedia" />
+    <a href="mailto:<?php echo $board->emailAddress(); ?>"><?php echo $board->emailAddress(); ?></a>
   </p>
   <p>
     <input type="hidden" name="method" value="PUT" />

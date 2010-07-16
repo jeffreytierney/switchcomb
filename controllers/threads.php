@@ -7,11 +7,11 @@ class SCThreadsController {
     $api = new SCApi();
     $thread = $api->threads_show();
     //$current_user->setThreadViews($thread->messageid, sizeof($thread->messages())-1);
-    
+
     $vars = array(
       "thread"=>$thread
     );
-    
+
     switch ($_GET["__content_type"]) {
       case "json":
         $output = array(
@@ -27,20 +27,21 @@ class SCThreadsController {
           "util_links"=>SCPartial::renderToString("thread/util_links", $vars),
           "content"=>SCPartial::renderToString("thread/thread", $vars)
         );
-        
+
         SCLayout::render("main", $vars, $cs);
     }
   }
   public function _new() {
     SC::loginRequired();
     global $current_user;
-    
+
     $vars = array(
       "subject"=>SC::getParam("subject", true),
       "text"=>SC::getParam("text", true),
-      "boardid"=>$_GET["boardid"]
+      "boardid"=>$_GET["boardid"],
+      "board"=>new SCBoard($_GET["boardid"])
     );
-    
+
     switch ($_GET["__content_type"]) {
       case "json":
         $output = array(
@@ -50,21 +51,21 @@ class SCThreadsController {
         break;
       case "html":
       default:
-    
+
         $cs = array(
           "title"=>"Create Thread",
           "head"=>SCPartial::renderToString("shared/head"),
           "util_links"=>SCPartial::renderToString("board/newthread_util_links", $vars),
           "content"=>SCPartial::renderToString("thread/new", $vars)
         );
-        
+
         SCLayout::render("main", $vars, $cs);
     }
   }
   public function create() {
     SC::loginRequired();
     global $current_user;
-    
+
     switch ($_GET["__content_type"]) {
       case "json":
         $api = new SCApi();

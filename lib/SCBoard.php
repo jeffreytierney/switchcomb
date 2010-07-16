@@ -12,14 +12,14 @@ class SCBoard extends SCBase {
 
   public $hidecreator;
   public $hidethreads;
-  
+
   private $creatinguser;
 	private $threadset;
   private $membershipset;
   // public function creator()
   // public function threads()
-  
-	
+
+
 	function __construct($seed=false, $count=false, $userid=false) {
     if($seed) {
       if(is_numeric($seed)) {
@@ -38,12 +38,12 @@ class SCBoard extends SCBase {
       $this->setNull();
     }
 	}
-	
+
 	function __destruct() {
 		$this->setNull();
 	}
-	
-	
+
+
 	private function setNull() {
 		$this->existing = null;
 		$this->boardid = null;
@@ -53,15 +53,15 @@ class SCBoard extends SCBase {
 		$this->creatorid = null;
 		$this->privacy = null;
     $this->lastpost = null;
-    
+
     $this->hidecreator = null;
     $this->hidethreads = null;
-    
+
     $this->creatinguser = null;
 		$this->threadset = null;
     $this->membershipset = null;
 	}
-	
+
   private function fromArray($arr, $count=false) {
     $this->setNull();
     if(sizeof($arr)) {
@@ -71,7 +71,7 @@ class SCBoard extends SCBase {
       else {
         $boardinfo = $arr;
       }
-      
+
 			$this->boardid = $boardinfo["brd_id"] or $this->boardid = $boardinfo["boardid"];
 			$this->boardname = $boardinfo["brd_name"] or $this->boardname = $boardinfo["boardname"];
 			$this->boarddescription = $boardinfo["brd_description"] or $this->boarddescription =  $boardinfo["boarddescription"];
@@ -80,7 +80,7 @@ class SCBoard extends SCBase {
 			//$this->creatorusername = $boardinfo["user_displayname"] or $boardinfo["creatorusername"];
 			$this->privacy = $boardinfo["brd_privacy"] or $this->privacy = $boardinfo["privacy"];
 			$this->lastpost = $boardinfo["lastpost"];
-      
+
       if(isset($boardinfo["creatinguser"])) {
         $this->creatinguser = $boardinfo["creatinguser"];
       }
@@ -92,7 +92,7 @@ class SCBoard extends SCBase {
         $this->membershipset = $boardinfo["membershipset"];
       }
       */
-      
+
       if($this->creatorid) {
         if($boardinfo["user_id"] && intval($boardinfo["user_id"]) == $this->creatorid) {
           $this->creatinguser = new SCUser($boardinfo);
@@ -103,44 +103,44 @@ class SCBoard extends SCBase {
           $this->creator = new SCUser($this->creatorid);
         }
         */
-     
+
       if($this->boardid) {
         $this->existing = true;
       }
-      
+
       if(isset($boardinfo["hidecreator"])) {
         $this->hidecreator = $boardinfo["hidecreator"];
       }
       if(isset($boardinfo["hidethreads"])) {
         $this->hidethreads = $boardinfo["hidethreads"];
       }
-      
+
     }
-    
+
     return $this;
   }
-  
+
   private function loadInfo($boardid, $count=false) {
 		//$sql = "SELECT * FROM boards b, users u WHERE b.brd_id=$boardid AND b.brd_creator=u.user_id";
 		$db = new SCDB();
 		//$boardinfo = $db->queryArray($sql);
-		
+
     $boardinfo = $db->q(
       array("*"),
       array("boards b, users u"),
       array("b.brd_id"=>$boardid, "b.brd_creator"=>"u.user_id")
     );
-    
+
 		if(sizeof($boardinfo)) {
       $this->fromArray($boardinfo, $count);
 		}
     else {
       throw new BoardException("Board not found", 404);
     }
-    
+
     return $this;
 	}
-  
+
   public function creator() {
     if(!$this->hidecreator) {
       if($this->creatinguser) {
@@ -153,7 +153,7 @@ class SCBoard extends SCBase {
     }
     return false;
   }
-  
+
   public function threads() {
     if(!$this->hidethreads) {
       if($this->threadset && is_array($this->threadset)) {
@@ -164,7 +164,7 @@ class SCBoard extends SCBase {
       }
     }
   }
-  
+
   public function memberships($receives_emails_only=false) {
     if($this->membershipset && is_a($this->membershipset, "SCMembershipSet")) {
       return $this->membershipset;
@@ -173,14 +173,14 @@ class SCBoard extends SCBase {
       return $this->loadMembers($receives_emails_only)->membershipset;
     }
   }
-  
+
   public function create() {
     if(!$this->boardname) {
 			throw new BoardException("You must give the board a name", 400);
 		}
-    
+
 		if(!$this->description) $description = "";
-    
+
 		if(!$this->privacy) $this->privacy = 0;
 		else $this->privacy = 1;
 		/*
@@ -190,25 +190,25 @@ class SCBoard extends SCBase {
     */
     if($this->creator()->existing) {
       $db = new SCDB();
-      
+
       $this->createdate = SC::dbDate();
       //$sql = "INSERT INTO boards (brd_name, brd_creator, brd_createdate, brd_privacy, brd_description) VALUES('" . SC::dbString($boardname) ."', " . $userid . ", '" . $createdate . "', $privacy, '" . SC::dbString($description) . "')";
       //$db->query($sql);
-      
+
       $insert_array = array(
-        "brd_name"=>SC::dbString($this->boardname, true), 
-        "brd_creator"=>$this->creator()->userid, 
-        "brd_createdate"=>$this->createdate, 
+        "brd_name"=>SC::dbString($this->boardname, true),
+        "brd_creator"=>$this->creator()->userid,
+        "brd_createdate"=>$this->createdate,
         "brd_privacy"=>$this->privacy,
         "brd_description"=>SC::dbString($this->description, true)
       );
-      
+
       $db->insertFromArray($insert_array, "boards");
-      
+
       if(mysql_insert_id($db->conn)) {
         $new_board = new SCBoard(mysql_insert_id($db->conn));
         $this->fromArray($new_board->toArray());
-        
+
         $this->addUser($this->creatorid, 10);
         return $this;
       }
@@ -227,30 +227,30 @@ class SCBoard extends SCBase {
 		//$sql = "SELECT * from messages WHERE msg_id=$messageid AND msg_board_id=".$this->boardid;
 		$db = new SCDB();
     //$hasMessage = $db->queryArray($sql);
-		
+
     $hasMessage = $db->q(
       array("*"),
       array("messages"),
       array("msg_id"=>$messageid, "msg_board_id"=>$this->boardid)
     );
-    
+
     if(sizeof($hasMessage) && $hasMessage[0]["msg_id"] == $messageid) return true;
 		else return false;
 	}
-  
+
   public function loadMembers($receives_emails_only=false) {
     if(!$this->boardid) {
       throw new BoardException("You must have an existing board to check memberships", 400);
     }
     $membershipset = new SCMembershipSet(false, $this->boardid);
     $membershipset->loadMembers($receives_emails_only);
-    
+
     $this->membershipset = $membershipset;
     return $this;
   }
-  
+
   public function loadThreads($start=false, $num=false, $hidemessages=false) {
-    
+
 		//$sql = "SELECT * FROM messages m, users u WHERE m.msg_board_id=".$this->boardid." AND m.msg_thread=0 AND m.msg_author=u.user_id ORDER BY m.msg_id DESC LIMIT $start, " . ($start + $num);
     $db = new SCDB();
 		//$threads = $db->queryArray($sql);
@@ -301,23 +301,23 @@ class SCBoard extends SCBase {
 			}
 			//echo sizeof($temp_threads);
 		}
-    
+
     return $this;
 	}
-  
+
   public function getThreadIds() {
     $thread_ids = array();
     $threads = $this->threads();
-    
+
     foreach($threads as $i=>$thread) {
       $thread_ids[] = $thread->messageid;
     }
-    
+
     return $thread_ids;
   }
-	
-	
-	
+
+
+
 	public function addUser($userid, $admin_level=0, $receives_emails=false, $invite_code=false) {
 		if(!$this->boardid) {
       throw new BoardException("You must have an existing board to join");
@@ -343,20 +343,20 @@ class SCBoard extends SCBase {
       throw new BoardException("This is a private board.  if you have an email invitation, please use the link from there to join.");
     }
 	}
-	
+
 	public function checkInvite($invite) {
 		if($invite->board_id==$this->boardid) return $invite->id;
 		return false;
 	}
-  
+
   public function addThread($thread_init) {
     $thread = new SCThread($thread_init);
     $thread->boardid = $this->boardid;
-    
+
     return $thread->create();
-    
+
 	}
-	
+
 	public function isExisting() {
 		return $this->existing;
 	}
@@ -364,7 +364,7 @@ class SCBoard extends SCBase {
 	public function go_to() {
 		SC::transfer("board.php?boardid=".$this->boardid);
 	}
-	
+
 	public function sendInvites($list, $user=false) {
 		if(!$user) {
       global $current_user;
@@ -378,20 +378,24 @@ class SCBoard extends SCBase {
         $user = $user;
       }
     }
-    
+
 		$sent_list = array();
 		$address_list = explode(",",$list);
-		
+
 		foreach($address_list as $id=>$address) {
 			$to = trim($address);
       $invite = new SCInvite();
       $invite->create($this, $to, $user);
 			$sent_list[] = $invite->email;
 		}
-		
+
 		return $sent_list;
-		
+
 	}
+
+  public function emailAddress() {
+    return str_replace(":boardid", $this->boardid, SC_MESSAGE_EMAIL_FROM_ADDRESS);
+  }
 
   public function toArray($for_db=false) {
     if(!$for_db) {
@@ -399,7 +403,7 @@ class SCBoard extends SCBase {
       $props["creator"] = $this->creator();
       $props["threads"] = $this->threads();
     }
-    
+
     return $props;
   }
 

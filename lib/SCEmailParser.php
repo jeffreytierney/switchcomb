@@ -22,13 +22,20 @@ class SCEmailParser extends EmailParser {
   protected function getSCFields() {
     $thread_re = "/^(?:re\:[\s]*)?\[*([0-9]+)\]/i";
     $board_re = "/([0-9]+)\@/i";
+    $board_thread_re = "/([0-9]+).([0-9]+)\@/i";
 
+    /*
     if(preg_match($thread_re, $this->subject, $matches)) {
       $this->threadid = intval($matches[1]);
     }
+    */
 
     if(preg_match($board_re, $this->to_address, $matches)) {
       $this->boardid = intval($matches[1]);
+    }
+    if(preg_match($board_thread_re, $this->to_address, $matches)) {
+      $this->threadid = intval($matches[1]);
+      $this->boardid = intval($matches[2]);
     }
 
     $reply_re = "/on .* wrote:\n(?:\>[^\n]*\n)*>?/i";

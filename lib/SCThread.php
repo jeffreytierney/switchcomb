@@ -255,6 +255,10 @@ class SCThread extends SCMessage {
 	}
   */
 
+  public function emailAddress() {
+    return str_replace(":boardid", $this->messageid.".".$this->boardid, SC_MESSAGE_EMAIL_FROM_ADDRESS);
+  }
+
   public function toArray() {
     $props = parent::toArray();
     $props["messages"] = $this->messages();
