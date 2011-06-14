@@ -9,14 +9,14 @@
       define("SC_ROOT", "/");
       define("SC_IMAGEBUCKET", "ilocal.switchcomb.com");
       define("SC_DBSERVER", "127.0.0.1");
-      define("SC_DBSCHEMA", "sc_mb");
+      define("SC_DBSCHEMA", "switchcomb");
       define("SC_DBUSER", "sc_mb");
       define("SC_DBPWD", "scmessageboard");
       define("SC_PAGETITLEBASE", "switchcomb");
       define("SC_CANEMAIL", false);
       define("SC_MSGSOURCE", "web");
       define("SC_IS_MOBILE", false);
-      define("SCINCLUDEPATH", "/webroot/switchcomb");
+      define("SCINCLUDEPATH", "/Users/jeff/code/projects/switchcomb");
       define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@t.switchcomb.com");
       break;
 
@@ -24,14 +24,14 @@
       define("SC_ROOT", "/");
       define("SC_IMAGEBUCKET", "ilocal.switchcomb.com");
       define("SC_DBSERVER", "127.0.0.1");
-      define("SC_DBSCHEMA", "sc_mb");
+      define("SC_DBSCHEMA", "switchcomb");
       define("SC_DBUSER", "sc_mb");
       define("SC_DBPWD", "scmessageboard");
       define("SC_PAGETITLEBASE", "mobile switchcomb");
       define("SC_CANEMAIL", false);
       define("SC_MSGSOURCE", "mobile web");
       define("SC_IS_MOBILE", true);
-      define("SCINCLUDEPATH", "/webroot/mswitchcomb;/webroot/switchcomb");
+      define("SCINCLUDEPATH", "/Users/jeff/code/projects/mswitchcomb;/Users/jeff/code/projects/switchcomb");
       define("SC_MESSAGE_EMAIL_FROM_ADDRESS", ":boardid"."@t.switchcomb.com");
       break;
 
