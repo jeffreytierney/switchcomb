@@ -1,0 +1,7 @@
+header append P3P: 'CP="CAO DSP COR CURa ADMa DEVa OUR IND PHY ONL UNI COM NAV INT DEM PRE"'
+Options +FollowSymLinks
+RewriteEngine on
+
+RewriteCond   %{REQUEST_FILENAME}   !^((.+)\.(js|css|jpg|gif|png))|(/test/test.php)$
+RewriteRule   ^(.*)$    index.php
+
