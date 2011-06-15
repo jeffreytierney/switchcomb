@@ -5,12 +5,18 @@ class SCMessagesController {
     SC::loginRequired();
     global $current_user;
 
+    $parent = new SCThread($_GET["threadid"]);
+    $type = $_GET["type"] or $type = "text";
+    $route_params = array("boardid"=>$parent->boardid,"threadid"=>$parent->messageid);
+
     $vars = array(
       "subject"=>SC::getParam("subject", true),
-      "message"=>SC::getParam("message", true),
-      "boardid"=>$_GET["boardid"],
-      "threadid"=>$_GET["threadid"],
-      "thread"=>new SCThread($_GET["threadid"])
+      "text"=>SC::getParam("message", true),
+      "parent"=>$parent,
+      "type"=>$type,
+      "controller"=>"messages",
+      "route_params"=>$route_params,
+      "action"=>SCRoutes::set("messages", "create", $route_params)
     );
 
     switch ($_GET["__content_type"]) {

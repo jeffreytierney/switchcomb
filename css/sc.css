@@ -450,20 +450,126 @@ div.message div.message_date {
 }
 
 
+
 .sc_create_reply {
   display: none;
   position: fixed;
-  height: 200px;
-  width: 500px;
-  top: 50%;
+  width: 40em;
+  top: 2em;
   left: 50%;
-  margin-top: -100px;
-  margin-left: -250px;
-  background-color: #444444;
-  color: #FFFFFF;
-  border: 2px solid #CBCBCB;
+  margin-left: -20em;
+  background-color: #FFF;
+  color: #000;
+  border: .2em solid #CBCBCB;
+  z-index: 100;
+  padding: 1em;
 }
 
 .loading {
   display: none;
+}
+
+#createmessage {
+  width: 40em;
+}
+
+#createmessage fieldset {
+  margin-bottom: 1em;
+}
+
+#createmessage fieldset.buttons input.button {
+  float: right;
+  margin-left: 1em;
+  font-size: 1.2em;
+  padding: .5em;
+  background-color: transparent;
+  border-width: .2em solid black;
+}
+
+#createmessage fieldset strong {
+  margin-top: 2.5em;
+  margin-bottom: -1em;
+  display: block;
+  font-size: 1.4em;
+  font-weight: bold;
+  line-height: 1.2em;
+  text-align: center;
+  clear: both;
+}
+
+#createmessage label, #createmessage a.submit_email {
+  display: block;
+  font-size: 1.2em;
+  font-weight: bold;
+  line-height: 1.2em;
+}
+
+#createmessage a.submit_email {
+  text-decoration: none;
+  margin-top: .25em;
+  color: #123456;
+  float: right;
+}
+
+#createmessage input.text, #createmessage input.file {
+  display: block;
+  width: 32.3em;
+  font-size: 1.2em;
+  line-height: 1.2em;
+  padding: .25em
+}
+
+#createmessage input.file {
+  width: auto;
+  float: left;
+}
+
+#createmessage textarea {
+  font-family: helvetica, verdana, arial, sans-serif;
+  font-size: 1.2em;
+  width: 32em;
+  padding: .5em;
+}
+
+#create_link_types {
+  padding: .5em;
+  margin-bottom: 1em;
+}
+
+#create_link_types li {
+  float: left;
+}
+
+#create_link_types li a {
+  display: block;
+  height: 4.4em;
+  width: 4.4em;
+  color: #FFF;
+  text-indent: -9999em;
+  background: transparent url("/images/icons/text.png") no-repeat scroll center center;
+  padding: .5em;
+  margin-right: .5em;
+}
+
+#create_link_types li a.image { background-image: url("/images/icons/image.png");}
+#create_link_types li a.video { background-image: url("/images/icons/video.png");}
+#create_link_types li a.link { background-image: url("/images/icons/link.png");}
+
+#create_link_types li a:hover, #create_link_types li a.active {
+  background-color: #DCDCDC;
+}
+
+#createmessage .t, #createmessage .v, #createmessage .i, #createmessage .l { display: none;}
+
+#createmessage.text fieldset.t {
+  display: block;
+}
+#createmessage.video fieldset.v {
+  display: block;
+}
+#createmessage.image fieldset.i {
+  display: block;
+}
+#createmessage.link fieldset.l {
+  display: block;
 }
