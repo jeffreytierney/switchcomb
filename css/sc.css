@@ -58,7 +58,7 @@ body {
 	margin:0 10px;
 	padding:0;
 	font-family: helvetica, verdana, arial, sans-serif;
-	font-size: 12px;
+	font-size: 13px;
 }
 
 h1, h2, h3 {
@@ -84,14 +84,16 @@ h3 {
 	border-bottom:1px solid #dcdcdc;
 	position: relative;
 	padding:3px 0 3px 0;
-  height: 57px;
-  line-height: 57px;
   margin-bottom: 10px;
 }
 
 #header_home {
-  float: left;
-  width: 33%;
+  width: 289px;
+  height: 51px;
+  background: transparent url(/images/logo.png) no-repeat scroll 0 0;
+  text-indent: -9999px;
+  display: block;
+  margin: 5px 10px;
 }
 
 #login {
@@ -123,25 +125,22 @@ h3 {
 	float:left;
 }
 
-#header_links {
-	float: left;
-	width: 33%;
-  text-align: center;
-}
-
 #links {
-  margin 0 auto;
+	float: left;
+	width: 60%;
+  text-align: center;
+  margin:; 0 auto;
 }
 
 #links li {
 	float: left;
-  width: 33%;
+	margin: 0 10px;
 }
 
 #pagecontainer {
 	position: relative;
-	width:94%;
-  padding: 0 2.5%; 
+	width:97%;
+  padding: 0 1%; 
 }
 
 #pagecontainer form h3 {
@@ -150,8 +149,14 @@ h3 {
 }
 
 #loggedin {
+  border-top:1px solid #dcdcdc;
+  line-height: 30px;
+  width: 100%;
+}
+
+#auth_container {
 	float: right;
-  width: 33%;
+  width: 39%;
 	text-align: right;
 }
 
@@ -248,11 +253,14 @@ h3 {
 
 #board_header div {
 	float: left;
+	white-space: nowrap;
+	overflow: hidden;
+	color: #000;
 }
 
 .boarditem {
-	height: 20px;
-	line-height: 20px;
+	height: 24px;
+	line-height: 24px;
 	border-bottom: 1px dotted #DCDCDC;
   color: #000;
   text-decoration: none;
@@ -273,11 +281,14 @@ h3 {
 
 .boarditem span {
 	float: left;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .board_threadname {
 	width: 49%;
   color: #345678;
+  text-indent: 5px;
 }
 
 .board_threadcreatedby {
@@ -336,6 +347,11 @@ a.linkbutton {
 a.linkbutton:hover {
 	background-color: #EFEFEF;
 }
+
+.thread {
+  margin-bottom: 50px;
+}
+
 div.message {
 	position: relative;
 	margin: 5px 0;
@@ -392,6 +408,7 @@ div.message div.message_date {
 
 #loadmore {
   display: none;
+  margin: 10px 0;
 }
 
 #notifier {
