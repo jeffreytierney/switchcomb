@@ -35,17 +35,24 @@ class SCThreadsController {
     SC::loginRequired();
     global $current_user;
 
+    $type = $_GET["type"] or $type = "text";
+    $parent = new SCBoard($_GET["boardid"]);
+    $route_params = array("boardid"=>$parent->boardid);
+
     $vars = array(
       "subject"=>SC::getParam("subject", true),
       "text"=>SC::getParam("text", true),
-      "boardid"=>$_GET["boardid"],
-      "board"=>new SCBoard($_GET["boardid"])
+      "type"=>$type,
+      "parent"=>$parent,
+      "controller"=>"threads",
+      "route_params"=>$route_params,
+      "action"=>SCRoutes::set("threads", "create", $route_params)
     );
 
     switch ($_GET["__content_type"]) {
       case "json":
         $output = array(
-          "content"=>SCPartial::renderToString("thread/new", $vars)
+          "content"=>SCPartial::renderToString("message/new", $vars)
         );
         echo SC::jsonify($output);
         break;
@@ -56,7 +63,7 @@ class SCThreadsController {
           "title"=>"Create Thread",
           "head"=>SCPartial::renderToString("shared/head"),
           "util_links"=>SCPartial::renderToString("board/newthread_util_links", $vars),
-          "content"=>SCPartial::renderToString("thread/new", $vars)
+          "content"=>SCPartial::renderToString("message/new", $vars)
         );
 
         SCLayout::render("main", $vars, $cs);
