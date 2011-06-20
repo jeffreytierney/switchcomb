@@ -352,6 +352,10 @@ a.linkbutton:hover {
   margin-bottom: 50px;
 }
 
+#messages * {
+  max-width: 100%;
+}
+
 div.message {
 	position: relative;
 	margin: 5px 0;
