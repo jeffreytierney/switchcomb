@@ -21,6 +21,7 @@ require_once "config/config.php";
 
 require_once "lib/SC.php";
 require_once "lib/SCBase.php";
+require_once "lib/SCBlock.php";
 require_once "lib/SCDB.php";
 require_once "lib/SCUserSession.php";
 require_once "lib/SCUser.php";

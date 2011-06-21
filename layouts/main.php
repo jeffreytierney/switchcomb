@@ -19,5 +19,7 @@
       <?php SCLayout::yield("content"); ?>
       <?php SCPartial::render("shared/notifier"); ?>
 		</div>
+	<?php SCPartial::render("shared/js_includes"); ?>
+	<?php SCBlock::render("javascript"); ?>
 	</body>
 </html>
