@@ -20,6 +20,7 @@ if(!SC) var SC = {};
 $.extend(SC, { "data":{}, "lib":{}, "util":{}, "ajax":{}});
 
 if(!SC.Config) SC.Config = {};
+SC.json = window.JSON;
 
 
 SC.lib = jQuery;

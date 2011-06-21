@@ -5,6 +5,7 @@
 <script type="text/javascript" src="<?php echo SC::jsPath("json2"); ?>"></script>
 <script type="text/javascript" src="<?php echo SC::jsPath("sc"); ?>"></script>
 <script type="text/javascript" src="<?php echo SC::jsPath("sc.board"); ?>"></script>
+<script type="text/javascript" src="<?php echo SC::jsPath("sc.api"); ?>"></script>
 
 <script type="text/javascript">
 

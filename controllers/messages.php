@@ -45,7 +45,7 @@ class SCMessagesController {
     switch ($_GET["__content_type"]) {
       case "json":
         $api = new SCApi();
-        $message = $api->threads_messages_create();
+        $message = $api->messages_create();
         $output = array(
           "query"=>SCRoutes::set("threads", "show", array("boardid"=>$message->boardid,"threadid"=>$message->threadid))
         );
@@ -55,7 +55,7 @@ class SCMessagesController {
       default:
         try {
           $api = new SCApi();
-          $message = $api->threads_messages_create();
+          $message = $api->messages_create();
           SC::transfer(SCRoutes::set("threads", "show", array("boardid"=>$message->boardid,"threadid"=>$message->threadid)));
         }
         catch(Exception $ex) {

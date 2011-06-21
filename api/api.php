@@ -31,7 +31,7 @@ function api_call() {
       return $api->handleResponse($resp, $methodname);
     }
     else {
-      throw new APIException("This method does not exist in the API", 404);
+      throw new APIException("This method ($methodname) does not exist in the API", 404);
     }
   }
   catch(Exception $ex) {
