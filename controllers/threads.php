@@ -22,7 +22,7 @@ class SCThreadsController {
       case "html":
       default:
         $cs = array(
-          "title"=>$thread->subject,
+          "title"=>htmlspecialchars($thread->subject),
           "head"=>SCPartial::renderToString("shared/head"),
           "util_links"=>SCPartial::renderToString("thread/util_links", $vars),
           "content"=>SCPartial::renderToString("thread/thread", $vars)

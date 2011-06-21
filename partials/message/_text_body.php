@@ -1,1 +1,1 @@
-<?php echo str_replace("\n", $linebreak, $message->text); ?>
+<?php echo str_replace("\n", $linebreak, htmlspecialchars($message->text)); ?>
