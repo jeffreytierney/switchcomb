@@ -391,16 +391,19 @@ div.message:hover div.message_options_content {
 
 
 div.message div.message_author {
+  text-align: left;
 	display: inline-block;
 	margin-left: 5px;
 }
 
 div.message div.message_source {
+  text-align: left;
 	display: inline-block;
 	margin-left: 5px;
 }
 
 div.message div.message_date {
+  text-align: left;
 	display: inline-block;
 }
 
