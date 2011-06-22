@@ -131,7 +131,7 @@ class SCMessage extends SCBase {
         //$media = $asset->hash;
       }
       if($this->type == "video") {
-        $media = $messageinfo["url"];
+        $media = $messageinfo["embed_code"];
       }
       if($this->type == "link") {
         $media = $messageinfo["url"];
