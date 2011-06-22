@@ -7,7 +7,7 @@
       <?php echo htmlspecialchars($thread->author()->displayname) ?>
     </span>
     <span class="board_threadcreatedate">
-      <?php echo $thread->created ?>
+      <?php echo $thread->timeAgo() ?>
     </span>
     <span class="board_threadreplies">
       <?php echo $thread->message_count ?>

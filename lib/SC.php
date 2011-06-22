@@ -223,6 +223,28 @@ class SC {
 
     $current_user = $user_session->updateSessionUser();
   }
+  
+  static function timeAgo($then, $now=null) {
+      
+      if($now === null) { $now = time(); }
+      
+
+      $seconds = $now - $then;
+      $minutes = floor($seconds / 60);
+      $hours = floor($seconds / 3600);
+      $days = floor($seconds / 86400);
+      $years = floor($seconds / (86400*365));
+      
+      if ($years) { $time_str = "over a year ago"; }
+      else if($days) { $time_str = $days . " day" . ($days > 1 ? "s ":" ") . "ago"; }
+      else if($hours) { $time_str = "about " . $hours . " hour" . ($hours > 1 ? "s ":" ") . "ago"; }
+      else if($minutes) { $time_str = $minutes . " minute" . ($minutes > 1 ? "s ":" ") . "ago"; }
+      else { $time_str = "just now"; }
+      
+
+      return $time_str;
+      
+  }
 }
 
 ?>

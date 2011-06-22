@@ -251,6 +251,14 @@ class SCMessage extends SCBase {
 
     return $props;
   }
+  
+  public function timestamp() {
+      return strtotime($this->created);
+  }
+  
+  public function timeAgo() {
+      return SC::timeAgo($this->timestamp());
+  }
 
 }
 

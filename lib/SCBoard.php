@@ -396,6 +396,15 @@ class SCBoard extends SCBase {
   public function emailAddress() {
     return str_replace(":boardid", $this->boardid, SC_MESSAGE_EMAIL_FROM_ADDRESS);
   }
+  
+  public function timestamp() {
+      return strtotime($this->createdate);
+  }
+  
+  public function timeAgo() {
+      return SC::timeAgo($this->timestamp());
+  }
+  
 
   public function toArray($for_db=false) {
     if(!$for_db) {

@@ -292,6 +292,15 @@ class SCMembership extends SCBase {
     return true;
   }
   
+  public function timestamp() {
+      return strtotime($this->join_date);
+  }
+  
+  public function timeAgo() {
+      return SC::timeAgo($this->timestamp());
+  }
+  
+  
 }
 
 class MembershipException extends Exception {}

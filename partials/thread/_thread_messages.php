@@ -12,7 +12,7 @@
     <div class="message_content clearfix">
       <div class="message_info">
         <div class="message_date">
-          <?php echo $message->created; ?>
+          <?php echo $message->timeAgo(); ?>
         </div>
         <div class="message_source">
           <?php echo $message->source; ?>

@@ -9,7 +9,7 @@
         </div>
         <div class="clearfix">
           <div class="boardset_boardname"><?php echo $membership->board->boarddescription; ?></div>
-          <div class="boardset_boardcreator"><?php echo $membership->board->createdate; ?></div>
+          <div class="boardset_boardcreator"><?php echo $membership->board->timeAgo(); ?></div>
         </div>
         <div class="clearfix">
           <div class="boardset_boardname">Receive Emails: <?php echo $membership->receives_emails ? "yes" : "no"; ?></div>
