@@ -3,7 +3,7 @@
     <div id="board_<?php echo $membership->board->boardid; ?>" class="boardset_board">
       <div class="boardset_boardheader clearfix">
         <div class="boardset_boardname">
-          <a href="<?php echo SCRoutes::set("boards", "show", array("boardid"=>$membership->board->boardid)); ?>"><?php echo $membership->board->boardname; ?></a>
+          <a href="<?php echo SCRoutes::set("boards", "show", array("boardid"=>$membership->board->boardid)); ?>"><?php echo htmlspecialchars($membership->board->boardname); ?></a>
         </div>
         <div class="boardset_boardactivity">
           <?php echo ($membership->board->lastpost ? "Last Post: " . $membership->board->lastpost : "No threads yet"); ?>

@@ -461,7 +461,7 @@ div.message div.message_date {
 
 .sc_create_reply {
   display: none;
-  position: fixed;
+  position: absolute;
   width: 40em;
   top: 2em;
   left: 50%;
