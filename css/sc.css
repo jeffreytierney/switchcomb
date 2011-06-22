@@ -79,6 +79,29 @@ h3 {
 	font-size: 14px;
 }
 
+.rnd {
+  -webkit-border-radius: .6em;
+  -moz-border-radius: .6em;
+  -o-border-radius: .6em;
+  border-radius: .6em;
+}
+
+.bgs {
+  -khtml-background-size: 100% !important;
+  -o-background-size:  100% !important;
+  -moz-background-size:  100% !important;
+  -webkit-background-size:  100% !important;
+  background-size:  100% !important;
+}
+
+.bshd {
+  -moz-box-shadow: 0 0 1em #AAA;
+  -webkit-box-shadow: 0 0 1em #AAA;
+  -o-box-shadow: 0 0 1em #AAA;
+  box-shadow: 0 0 1em #AAA;
+}
+
+
 #header {
 	width: 100%;
 	border-bottom:1px solid #dcdcdc;
