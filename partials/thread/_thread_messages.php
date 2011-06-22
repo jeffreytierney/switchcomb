@@ -9,7 +9,7 @@
         </li>
       </ul>
     </div>
-    <div class="message_content">
+    <div class="message_content clearfix">
       <div class="message_info clearfix">
         <div class="message_date">
           <?php echo $message->created; ?>
