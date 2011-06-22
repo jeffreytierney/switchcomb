@@ -22,7 +22,7 @@ class SCBoardsController {
       default:
     
         $cs = array(
-          "title"=>$vars["board"]->boardname,
+          "title"=>htmlspecialchars($vars["board"]->boardname),
           "util_links"=>SCPartial::renderToString("board/util_links", $vars),
           "content"=>SCPartial::renderToString("board/board", $vars)
         );

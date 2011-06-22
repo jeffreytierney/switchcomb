@@ -20,6 +20,7 @@ if(!SC) var SC = {};
 $.extend(SC, { "data":{}, "lib":{}, "util":{}, "ajax":{}});
 
 if(!SC.Config) SC.Config = {};
+SC.json = window.JSON;
 
 
 SC.lib = jQuery;
@@ -364,7 +365,7 @@ SC.ajax.request.prototype = {
   timeout: 10000,
   singleThreaded:false,
   dataType: 'json',
-  contentType: 'application/json',
+  contentType: 'application/x-www-form-urlencoded',
   scope: this,
   async: true,
   method: 'GET',

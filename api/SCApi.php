@@ -588,7 +588,7 @@ class SCApi {
 
   }
 
-  public function threads_messages_create($params = null) { // aka create thread
+  public function messages_create($params = null) { // aka create thread
     if($params && isset($params["__partial"])) return null;
     if($params === null) {
       $this->requireRequestType("PUT");
@@ -600,6 +600,7 @@ class SCApi {
     $current_user = $this->requireLogin("You must be logged in to post a message to a thread");
 
     $params["authoringuser"] = $current_user;
+
 
     $thread = new SCThread($params["threadid"]);
     $message = $thread->addMessage($params);
