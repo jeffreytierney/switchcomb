@@ -365,7 +365,7 @@ SC.ajax.request.prototype = {
   timeout: 10000,
   singleThreaded:false,
   dataType: 'json',
-  contentType: 'application/json',
+  contentType: 'application/x-www-form-urlencoded',
   scope: this,
   async: true,
   method: 'GET',

@@ -107,8 +107,7 @@ SC.api = (function() {
     
     // initialize the return object that will be passed to the ajax request with the url
     var return_obj = {
-      url: route_prefix + route_parts.join("/"),
-      contentType: 'application/x-www-form-urlencoded'
+      url: route_prefix + route_parts.join("/")
     };
     
     // and if we have params, and its an object
