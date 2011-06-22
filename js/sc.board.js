@@ -640,7 +640,7 @@ SC.ReplyCreateForm.prototype = {
   },
   createEl: function(data, dont_show) {
     if(data && data.content) {
-      this.el = $(document.createElement("div")).attr("id", this.el_id).addClass("sc_create_reply").addClass("rnd").addClass("bshd");;
+      this.el = $(document.createElement("div")).attr("id", this.el_id).addClass("sc_create_reply").addClass("rnd").addClass("bshd");
       this.el.append(data.content);
       $("body").append(this.el);
       this.cacheElements().insertElements().bindEvents();
@@ -661,9 +661,9 @@ SC.ReplyCreateForm.prototype = {
     else {
       this.loadEl();
     }
+    this.el.css({top:$(window).scrollTop()+20});
     this.text.focus();
     this.callHook("sc_replyform_show");
-    this.el.css({top:$(document.body).scrollTop()+20});
     return this;
   },
   hide: function() {

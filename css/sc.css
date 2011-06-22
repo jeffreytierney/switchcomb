@@ -463,7 +463,6 @@ div.message div.message_date {
   display: none;
   position: absolute;
   width: 40em;
-  top: 2em;
   left: 50%;
   margin-left: -20em;
   background-color: #FFF;
