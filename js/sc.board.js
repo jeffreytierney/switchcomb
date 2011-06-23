@@ -727,42 +727,47 @@ SC.ReplyCreateForm.prototype = {
 
 SC.util.acceptsHooks(SC.ReplyCreateForm);
 
-SC.TimeUpdater = function(start_time, options) {
-  start_time = start_time || +new Date();
+SC.TimeUpdater = function(options) {
   options = options || {};
-  this.init(start_time, options);
+  this.init(options);
 }
 
 SC.TimeUpdater.prototype = {
   constructor: SC.TimeUpdater.prototype.constructor,
-  init: function(start_time, options) {
-    var defaults = {is_seconds:false, interval:60000};
-    this.start_time = start_time;
+  init: function(options) {
+    var defaults = {interval:30000};
     this.options = $.extend(defaults, options);
-    if(this.options.is_seconds) { this.start_time *= 1000; }
-    this.start_ms = +new Date();
     this.update_timer = null;
     this.start();
   },
   diff: function() {
     var now = +new Date(),
-        diff = now - this.start_ms,
         _this = this;
         
     $(".ts").each(function(i, val) {
       var $val = $(val),
+          start = $val.data("start"),
           base = $val.data("timestamp");
           
-      if(_this.options.is_seconds) { base *= 1000; }
+      if(!start) { 
+        start = (+new Date() - base * 1000);
+        $val.data("start", start);
+      }
       
-      var cur = base + diff;
-      $val.html(SC.util.timeAgoInWords(cur, _this.start_time));
+      diff = now - start;
+                
+      var html = SC.util.timeAgoInWords(start);
+      $val.html(html);
     });
     
     return this;
   },
   start: function(interval) {
     var _this = this;
+    $(".ts").each(function(i, val) {
+      var $val = $(val);
+      $val.data("start", (+new Date() - $val.data("timestamp") * 1000));
+    });
     this.update_timer = setInterval(function() {
       _this.diff();
     }, this.options.interval || 60000);

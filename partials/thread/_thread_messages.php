@@ -11,7 +11,7 @@
     </div>
     <div class="message_content clearfix">
       <div class="message_info">
-        <div class="message_date ts" data-timestamp="<?php echo $message->timestamp(); ?>">
+        <div class="message_date ts" data-timestamp="<?php echo (time() - $message->timestamp()); ?>">
           <?php echo $message->timeAgo(); ?>
         </div>
         <div class="message_source">

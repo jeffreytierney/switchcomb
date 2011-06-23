@@ -6,7 +6,7 @@
     <span class="board_threadcreatedby">
       <?php echo htmlspecialchars($thread->author()->displayname) ?>
     </span>
-    <span class="board_threadcreatedate ts" data-timestamp="<?php echo $board->timestamp(); ?>">
+    <span class="board_threadcreatedate ts" data-timestamp="<?php echo (time() - $board->timestamp()); ?>">
       <?php echo $thread->timeAgo() ?>
     </span>
     <span class="board_threadreplies">
@@ -15,10 +15,10 @@
   </a>
 <?php endforeach; ?>
 
-<?php $now = time(); SCBlock::set("javascript", <<<JS
+<?php SCBlock::set("javascript", <<<JS
 <script type="text/javascript">
 $(function() {
-    new SC.TimeUpdater($now, {is_seconds:true});
+    new SC.TimeUpdater();
 });
 </script>
 JS
