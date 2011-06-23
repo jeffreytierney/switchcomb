@@ -1,4 +1,4 @@
-<script type="text/javascript" src="<?php echo SC::jsPath("jquery-1.4.2.min"); ?>"></script>
+<script type="text/javascript" src="<?php echo SC::jsPath("jquery-1.6.1.min"); ?>"></script>
 <script type="text/javascript" src="<?php echo SC::jsPath("jquery.form"); ?>"></script>
 <script type="text/javascript" src="<?php echo SC::jsPath("json2"); ?>"></script>
 <script type="text/javascript" src="<?php echo SC::jsPath("sc"); ?>"></script>

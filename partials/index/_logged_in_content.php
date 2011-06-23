@@ -6,7 +6,7 @@
           <a href="<?php echo SCRoutes::set("boards", "show", array("boardid"=>$membership->board->boardid)); ?>"><?php echo htmlspecialchars($membership->board->boardname); ?></a>
         </div>
         <div class="boardset_boardactivity">
-          <?php echo ($membership->board->lastpost ? "Last Post: " . $membership->board->lastpost : "No threads yet"); ?>
+          <?php echo ($membership->board->lastpost ? "Last Post: " . SC::timeAgo(strtotime($membership->board->lastpost)) : "No threads yet"); ?>
         </div>
       </div>
       <?php foreach($membership->board->threads() as $thread_id=>$thread): ?>

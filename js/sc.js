@@ -587,3 +587,32 @@ SC.util.callHook = function(which) {
   }
   return this;
 };
+
+SC.util.timeAgoInWords = function(ts) {
+    if(typeof ts == "string") {
+      ts = Date.parse(ts);
+    }
+    else if (typeof ts === "undefined") {
+      ts = (+new Date());
+    }
+    
+    if(!ts) { return "some time ago"; }
+    
+    var ms = (+new Date()) - ts;
+
+    var seconds = Math.floor(ms / 1000);
+    var minutes = Math.floor(ms / 60000);
+    var hours = Math.floor(ms / 3600000);
+    var days = Math.floor(ms / 86400000);
+    var years = Math.floor(ms / (86400000*365));
+
+    var time_str = "ago";
+    if (years) { time_str = "over a year ago"; }
+    else if(days) { time_str = days + " day" + (days > 1 ? "s ":" ") + time_str; }
+    else if(hours) { time_str = "about " + hours + " hour" + (hours > 1 ? "s ":" ") +time_str; }
+    else if(minutes) { time_str = minutes + " minute" + (minutes > 1 ? "s ":" ") +time_str; }
+    else { time_str = "just now"; }
+
+    return time_str;
+};
+

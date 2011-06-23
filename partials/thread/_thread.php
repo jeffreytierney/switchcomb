@@ -9,3 +9,12 @@
     </a>
   </div>
 </div>
+
+<?php $now = time(); SCBlock::set("javascript", <<<JS
+<script type="text/javascript">
+$(function() {
+    new SC.TimeUpdater($now, {is_seconds:true});
+});
+</script>
+JS
+); ?>
