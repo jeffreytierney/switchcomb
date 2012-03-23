@@ -146,7 +146,7 @@ class SCAsset extends SCBase {
     $meta = array(
       "orig-name" => $this->orig_path
     );
-    $s3 = new S3(awsAccessKey, awsSecretKey);
+    $s3 = new S3(awsAccessKey, awsSecretKey, false);
     if ($s3->putObject($this->toArray(), SC_IMAGEBUCKET, $this->path(), S3::ACL_PUBLIC_READ, $meta)) {
       $db = new SCDB();
 
